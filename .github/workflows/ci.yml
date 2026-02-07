@@ -42,7 +42,7 @@ jobs:
         run: docker compose up -d backend
       
       - name: Run backend lint
-        run: docker compose exec -T backend flake8 core api
+        run: docker compose exec -T backend flake8 api
       
       - name: Run backend tests
         run: docker compose exec -T backend pytest
