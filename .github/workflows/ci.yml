@@ -43,10 +43,10 @@ jobs:
       
       # - name: Run backend lint
       #   run: docker compose exec -T backend flake8 api
-      # uncomment above line when you start adding code
       
-      - name: Run backend tests
-        run: docker compose exec -T backend pytest
+      # - name: Run backend tests
+      #   run: docker compose exec -T backend pytest
+      # uncomment above line when you start adding code
       
       - name: Start frontend service
         run: docker compose up -d frontend
