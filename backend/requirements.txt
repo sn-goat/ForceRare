@@ -1,0 +1,15 @@
+asgiref==3.11.1
+Django==6.0.2
+django-cors-headers==4.9.0
+flake8==7.3.0
+gunicorn==25.0.1
+iniconfig==2.3.0
+mccabe==0.7.0
+mysqlclient==2.2.7
+packaging==26.0
+pluggy==1.6.0
+pycodestyle==2.14.0
+pyflakes==3.4.0
+Pygments==2.19.2
+pytest==9.0.2
+sqlparse==0.5.5

@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Create .env file
+        run: |
+          echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+          echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
+          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+          echo "DB_HOST=db" >> .env
+          echo "DB_NAME=${{ secrets.MYSQL_DATABASE }}" >> .env
+          echo "DB_USER=${{ secrets.MYSQL_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+    
+
+      - name: Build Docker images
+        run: docker compose build
+      
+
+      - name: Start database
+        run: docker compose up -d db
+      
+      - name: Wait for database
+        run: |
+          echo "Waiting for database to be ready..."
+          sleep 10
+      
+      - name: Start backend service
+        run: docker compose up -d backend
+      
+      - name: Run backend lint
+        run: docker compose exec -T backend flake8 core api
+      
+      - name: Run backend tests
+        run: docker compose exec -T backend pytest
+      
+      - name: Start frontend service
+        run: docker compose up -d frontend
+      
+      - name: Run frontend lint
+        run: docker compose exec -T frontend npm run lint
+      
+      - name: Run frontend tests
+        run: docker compose exec -T frontend npm run test -- --watch=false --browsers=ChromeHeadless
+      
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs
+      
+      - name: Shutdown services
+        if: always()
+        run: docker compose down -v
