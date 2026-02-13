@@ -21,11 +21,19 @@ services:
     command: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --reload
     volumes:
       - ./backend:/app
+      - ./backend/media:/app/media
+    env_file:
+      - .env
     environment:
+      USE_MYSQL: ${USE_MYSQL}
       DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "8000:8000"
     depends_on:
