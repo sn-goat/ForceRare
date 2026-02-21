@@ -14,4 +14,5 @@ pyflakes==3.4.0
 Pygments==2.19.2
 python-dotenv==1.1.1
 pytest==9.0.2
+pytest-django==4.10.0
 sqlparse==0.5.5

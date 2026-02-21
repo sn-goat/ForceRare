@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 import os
+import sys
 from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
@@ -118,6 +119,15 @@ else:
         }
     }
 
+# ── Testing: use fast in-memory SQLite (no CREATE DB privilege needed) ──
+if 'pytest' in sys.modules:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -162,7 +172,7 @@ CORS_ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.getenv(
         'CORS_ALLOWED_ORIGINS',
-        'http://localhost:4200,http://127.0.0.1:4200,http://localhost:8080,http://127.0.0.1:8080',
+        'http://localhost:8080,http://127.0.0.1:8080',
     ).split(',')
     if origin.strip()
 ]

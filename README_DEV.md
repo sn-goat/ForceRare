@@ -95,6 +95,32 @@ docker compose ps
 
 ---
 
+## If backend mismatch iptables-legacy vs nf_tables
+
+1. Stop everything cleanly (service + socket)
+sudo systemctl stop docker docker.socket containerd
+
+2. Use nft backend consistently
+sudo update-alternatives --set iptables /usr/sbin/iptables-nft
+sudo update-alternatives --set ip6tables /usr/sbin/ip6tables-nft
+sudo update-alternatives --set arptables /usr/sbin/arptables-nft 2>/dev/null || true
+sudo update-alternatives --set ebtables /usr/sbin/ebtables-nft 2>/dev/null || true
+
+3. Remove stale Docker networks/bridges
+docker network prune -f || true
+sudo ip link delete docker0 2>/dev/null || true
+
+4. Start Docker again
+sudo systemctl start docker
+
+5.  Verify backend now
+iptables --version
+ip6tables --version
+docker info | grep -i -E "Firewall Backend|iptables"
+
+6.  Retry compose
+docker compose up -d
+
 ## Database check (MySQL)
 
 Confirm Django DB engine:
