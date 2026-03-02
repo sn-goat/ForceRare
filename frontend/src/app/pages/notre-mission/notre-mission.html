@@ -1,0 +1,83 @@
+<app-page-hero
+  [title]="page.hero.title"
+  [subtitle]="page.hero.subtitle"
+  [backgroundImage]="heroImage()"
+/>
+
+<!-- Mission envers les familles -->
+<section class="section content-section">
+  <div class="section__inner">
+    <div class="mission-grid">
+      <div class="mission-grid__text content-narrow">
+        <div class="accent-bar"></div>
+        <h2 class="content-heading">{{ page.mission.heading }}</h2>
+        @for (p of page.mission.paragraphs; track p) {
+          <p class="content-body">{{ p }}</p>
+        }
+        <ul class="check-list">
+          @for (item of page.mission.bullets; track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+        <p class="content-body content-body--accent">{{ page.mission.accent }}</p>
+      </div>
+      @if (missionImage(); as img) {
+        <div class="mission-grid__image">
+          <img
+            class="mission-grid__img"
+            [ngSrc]="img.url"
+            [alt]="img.alt_text || img.title"
+            width="500"
+            height="375"
+          />
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Nos ambitions -->
+<section class="section content-section content-section--alt">
+  <div class="section__inner content-narrow">
+    <h2 class="content-heading">{{ page.ambitions.heading }}</h2>
+    <p class="content-body">{{ page.ambitions.intro }}</p>
+
+    <div class="ambitions-grid">
+      @for (card of page.ambitions.cards; track card.title) {
+        <div class="ambition-card">
+          <h3 class="ambition-card__title">{{ card.title }}</h3>
+          <ul class="ambition-card__list">
+            @for (item of card.items; track item) {
+              <li>{{ item }}</li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+
+    <p class="content-body" style="text-align: center; margin-top: 2.5rem; font-weight: 600;">
+      {{ page.ambitions.closing }}
+    </p>
+  </div>
+</section>
+
+<!-- Ambassadeurs -->
+<section class="section content-section content-section--dark">
+  <div class="section__inner content-narrow" style="text-align: center;">
+    <h2 class="content-heading content-heading--light">{{ page.ambassador.heading }}</h2>
+    @for (p of page.ambassador.paragraphs; track p) {
+      <p class="content-body content-body--on-dark">{{ p }}</p>
+    }
+    <div class="ambassador-roles">
+      @for (role of page.ambassador.roles; track role) {
+        <div class="ambassador-role">{{ role }}</div>
+      }
+    </div>
+    <a class="btn-primary" routerLink="/nous-joindre" style="margin-top: 2rem;">
+      {{ page.ambassador.cta }}
+    </a>
+  </div>
+</section>
+
+<app-faq />
+<app-cta-banner />

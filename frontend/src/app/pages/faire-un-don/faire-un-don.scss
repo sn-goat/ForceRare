@@ -1,0 +1,154 @@
+/* ============================================================
+   FAIRE UN DON — Page-specific styles
+   ============================================================ */
+
+.donate-section {
+  background: var(--color-surface);
+
+  &--alt {
+    background: var(--color-surface-alt);
+  }
+}
+
+.donate-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 4rem;
+  align-items: start;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.donate-heading {
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--color-primary);
+  display: inline-block;
+}
+
+.donate-body {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: var(--color-text-light);
+  margin-bottom: 1.25rem;
+}
+
+.donate-cta {
+  font-size: 1.1rem;
+  padding: 1rem 2.5rem;
+  margin-top: 0.5rem;
+}
+
+.donate-note {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+}
+
+/* Impact sidebar */
+.donate-impact {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.donate-impact__title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.impact-card {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.25rem;
+  background: var(--color-surface-alt);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: box-shadow var(--transition-speed), transform var(--transition-speed);
+
+  &:hover {
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+  }
+
+  strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.2rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-text-light);
+  }
+}
+
+.impact-card__number {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(211, 47, 47, 0.08);
+  border-radius: 50%;
+  letter-spacing: -0.02em;
+}
+
+/* Other ways */
+.other-ways {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.other-way {
+  padding: 2rem 1.5rem;
+  background: var(--color-surface);
+  border-radius: var(--border-radius);
+  border-top: 3px solid var(--color-primary);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+
+  h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-text-light);
+  }
+}

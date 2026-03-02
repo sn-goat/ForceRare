@@ -1,0 +1,45 @@
+<section class="hero">
+  <!-- Gradient background with animated shapes -->
+  <div class="hero__bg">
+    <div class="hero__shape hero__shape--1"></div>
+    <div class="hero__shape hero__shape--2"></div>
+  </div>
+
+  <div class="hero__content">
+    <!-- Logo -->
+    @if (logoUrl(); as url) {
+      <img class="hero__logo" [ngSrc]="url" alt="Logo Force Rare" width="180" height="180" priority />
+    }
+
+    <h1 class="hero__title">{{ hero.title }}</h1>
+    <p class="hero__tagline">{{ hero.tagline }}</p>
+
+    <div class="hero__actions">
+      <a class="btn-primary hero__cta" routerLink="/faire-un-don">
+        {{ hero.cta }}
+      </a>
+      <a class="btn-outline hero__cta-secondary" routerLink="/notre-histoire">
+        {{ hero.secondaryCta }}
+      </a>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="hero__scroll">
+    <div class="hero__scroll-mouse">
+      <div class="hero__scroll-wheel"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Mission pillars strip (like Centraide's icon cards) -->
+<section class="pillars">
+  <div class="pillars__inner">
+    @for (bullet of mission.bullets; track bullet; let i = $index) {
+      <div class="pillars__card">
+        <span class="pillars__icon">{{ pillarsIcons[i] }}</span>
+        <p class="pillars__text">{{ bullet }}</p>
+      </div>
+    }
+  </div>
+</section>

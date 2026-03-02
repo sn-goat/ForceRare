@@ -1,0 +1,61 @@
+<app-page-hero
+  [title]="page.hero.title"
+  [subtitle]="page.hero.subtitle"
+  [backgroundImage]="heroImage()"
+/>
+
+<!-- Intro -->
+<section class="section content-section">
+  <div class="section__inner content-narrow">
+    <div class="accent-bar"></div>
+    <p class="content-lead">{{ page.intro.lead }}</p>
+    @for (p of page.intro.paragraphs; track p) {
+      <p class="content-body">{{ p }}</p>
+    }
+  </div>
+</section>
+
+<!-- Partner sections -->
+@for (partner of partners; track partner.name; let i = $index; let odd = $odd) {
+  <section class="section content-section" [class.content-section--alt]="odd" [id]="partner.name | lowercase">
+    <div class="section__inner content-narrow">
+      <h2 class="content-heading">{{ partner.fullName }}</h2>
+      @for (p of partner.fullDescription; track $index; let first = $first) {
+        @if (first) {
+          <p class="content-body">{{ p }}</p>
+        }
+      }
+      <ul class="partner-list">
+        @for (mission of partner.missions; track mission) {
+          <li>{{ mission }}</li>
+        }
+      </ul>
+      @for (p of partner.fullDescription; track $index; let first = $first) {
+        @if (!first) {
+          <p class="content-body">{{ p }}</p>
+        }
+      }
+      <a class="partner-link" [href]="partner.websiteUrl" target="_blank" rel="noopener noreferrer">
+        {{ partner.websiteLabel }} →
+      </a>
+    </div>
+  </section>
+}
+
+<!-- Integrity -->
+<section class="section content-section content-section--dark">
+  <div class="section__inner content-narrow" style="text-align: center;">
+    <h2 class="content-heading content-heading--light">{{ page.integrity.heading }}</h2>
+    <div class="integrity-grid">
+      @for (item of page.integrity.items; track item) {
+        <div class="integrity-item">{{ item }}</div>
+      }
+    </div>
+    <p class="content-body content-body--on-dark" style="margin-top: 2rem;">
+      {{ page.integrity.body }}
+    </p>
+  </div>
+</section>
+
+<app-faq />
+<app-cta-banner />

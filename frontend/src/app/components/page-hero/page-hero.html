@@ -1,0 +1,18 @@
+<section class="page-hero" [class.page-hero--has-bg]="backgroundImage">
+  @if (backgroundImage) {
+    <img
+      class="page-hero__bg-image"
+      [ngSrc]="backgroundImage"
+      alt=""
+      fill
+      priority
+    />
+    <div class="page-hero__overlay"></div>
+  }
+  <div class="page-hero__inner">
+    <h1 class="page-hero__title">{{ title }}</h1>
+    @if (subtitle) {
+      <p class="page-hero__subtitle">{{ subtitle }}</p>
+    }
+  </div>
+</section>

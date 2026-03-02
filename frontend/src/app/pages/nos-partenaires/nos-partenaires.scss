@@ -1,0 +1,68 @@
+/* ============================================================
+   NOS PARTENAIRES — Page-specific styles
+   ============================================================ */
+
+/* Partner bullet list */
+.partner-list {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  li {
+    padding-left: 1.5rem;
+    position: relative;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-light);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6rem;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-primary);
+    }
+  }
+}
+
+.partner-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  transition: color var(--transition-speed);
+
+  &:hover {
+    color: var(--color-primary-dark);
+  }
+}
+
+/* Integrity grid */
+.integrity-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.integrity-item {
+  padding: 1.25rem 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-top: 2px solid var(--color-accent);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+}

@@ -1,0 +1,40 @@
+<section class="video-showcase section" id="pourquoi">
+  <div class="section__inner">
+    <h2 class="section-heading">{{ videoContent.heading }}</h2>
+    <p class="section-subtext">{{ videoContent.subtext }}</p>
+
+    @if (video(); as v) {
+      <div class="video-showcase__player">
+        @if (!playing()) {
+          <!-- Thumbnail with play button overlay -->
+          <div class="video-showcase__thumbnail" (click)="play()" (keydown.enter)="play()" tabindex="0" role="button" aria-label="Lire la vidéo">
+            @if (v.thumbnail_url) {
+              <img [ngSrc]="v.thumbnail_url" [alt]="v.title" class="video-showcase__thumb-img" fill />
+            } @else {
+              <div class="video-showcase__thumb-placeholder"></div>
+            }
+            <div class="video-showcase__play-btn">
+              <svg viewBox="0 0 80 80" class="video-showcase__play-icon">
+                <circle cx="40" cy="40" r="38" fill="rgba(211,47,47,0.9)" />
+                <polygon points="32,24 58,40 32,56" fill="#fff" />
+              </svg>
+            </div>
+          </div>
+        } @else {
+          <!-- Actual video player -->
+          <video
+            class="video-showcase__video"
+            [src]="v.url"
+            controls
+            autoplay
+            playsinline
+          >
+            Votre navigateur ne supporte pas la vidéo.
+          </video>
+        }
+
+        <p class="video-showcase__description">{{ v.description }}</p>
+      </div>
+    }
+  </div>
+</section>

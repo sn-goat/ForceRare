@@ -1,0 +1,53 @@
+<app-page-hero
+  [title]="page.hero.title"
+  [subtitle]="page.hero.subtitle"
+  [backgroundImage]="heroImage()"
+/>
+
+<!-- Main CTA -->
+<section class="section donate-section">
+  <div class="section__inner donate-grid">
+
+    <div class="donate-content">
+      <div class="accent-bar"></div>
+      <h2 class="donate-heading">{{ page.main.heading }}</h2>
+      @for (p of page.main.paragraphs; track $index) {
+        <p class="donate-body">{{ p }}</p>
+      }
+      <a class="btn-primary donate-cta" [href]="donateUrl" target="_blank" rel="noopener noreferrer">
+        {{ page.main.cta }}
+      </a>
+      <p class="donate-note">{{ page.main.note }}</p>
+    </div>
+
+    <div class="donate-impact">
+      <h3 class="donate-impact__title">{{ page.impact.title }}</h3>
+      @for (card of page.impact.cards; track card.number) {
+        <div class="impact-card">
+          <span class="impact-card__number">{{ card.number }}</span>
+          <div>
+            <strong>{{ card.title }}</strong>
+            <p>{{ card.description }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Other ways -->
+<section class="section donate-section donate-section--alt">
+  <div class="section__inner content-narrow" style="text-align: center;">
+    <h2 class="donate-heading" style="display: block;">{{ page.otherWays.heading }}</h2>
+    <div class="other-ways">
+      @for (way of page.otherWays.items; track way.title) {
+        <div class="other-way">
+          <h3>{{ way.title }}</h3>
+          <p>{{ way.description }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<app-faq />
