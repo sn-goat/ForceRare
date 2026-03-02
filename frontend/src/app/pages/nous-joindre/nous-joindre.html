@@ -17,6 +17,15 @@
         </div>
       } @else {
         <form class="contact-form" (ngSubmit)="onSubmit()" #contactForm="ngForm">
+
+          <!-- Message d'erreur -->
+          @if (error()) {
+            <div class="contact-error">
+              <p>{{ error() }}</p>
+            </div>
+          }
+
+          <!-- Champ Nom -->
           <div class="form-group">
             <label for="name">{{ page.labels.name }}</label>
             <input
@@ -28,6 +37,8 @@
               [placeholder]="page.placeholders.name"
             />
           </div>
+
+          <!-- Champ Email -->
           <div class="form-group">
             <label for="email">{{ page.labels.email }}</label>
             <input
@@ -39,6 +50,8 @@
               [placeholder]="page.placeholders.email"
             />
           </div>
+
+          <!-- Champ Sujet -->
           <div class="form-group">
             <label for="subject">{{ page.labels.subject }}</label>
             <input
@@ -49,6 +62,8 @@
               [placeholder]="page.placeholders.subject"
             />
           </div>
+
+          <!-- Champ Message -->
           <div class="form-group">
             <label for="message">{{ page.labels.message }}</label>
             <textarea
@@ -60,9 +75,15 @@
               [placeholder]="page.placeholders.message"
             ></textarea>
           </div>
-          <button class="btn-primary contact-form__submit" type="submit" [disabled]="!contactForm.valid">
-            {{ page.labels.submit }}
+
+          <!-- Bouton Submit (UN SEUL !) -->
+          <button
+            class="btn-primary contact-form__submit"
+            type="submit"
+            [disabled]="!contactForm.valid || loading()">
+            {{ loading() ? 'Envoi en cours...' : page.labels.submit }}
           </button>
+
         </form>
       }
     </div>
