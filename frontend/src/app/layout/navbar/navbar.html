@@ -1,11 +1,9 @@
 <nav class="navbar" [class.navbar--scrolled]="scrolled()" role="navigation">
   <div class="navbar__inner">
-    <!-- Logo -->
     <a class="navbar__logo" routerLink="/" (click)="closeMenu()">
       <span class="navbar__logo-text">FORCE RARE</span>
     </a>
 
-    <!-- Desktop nav -->
     <ul class="navbar__links">
       @for (link of links; track link.label) {
         <li>
@@ -23,12 +21,10 @@
       }
     </ul>
 
-    <!-- CTA button (desktop) -->
     <a class="navbar__cta btn-primary" routerLink="/faire-un-don">
       Faire un don
     </a>
 
-    <!-- Mobile hamburger -->
     <button
       class="navbar__burger"
       [class.navbar__burger--open]="menuOpen()"
@@ -42,7 +38,6 @@
     </button>
   </div>
 
-  <!-- Mobile drawer -->
   @if (menuOpen()) {
     <div class="navbar__mobile" role="dialog" aria-label="Menu de navigation">
       <ul class="navbar__mobile-links">

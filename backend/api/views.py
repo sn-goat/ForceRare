@@ -1,12 +1,34 @@
 import json
+import re
+import logging
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.core.mail import send_mail
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from .models import ImageAsset, VideoAsset
 
-# ── Image serialisation & views ──────────────────────────
+logger = logging.getLogger(__name__)
+
+MAX_NAME = 100
+MAX_EMAIL = 254
+MAX_SUBJECT = 100
+MAX_MESSAGE = 5000
+
+VALID_SUBJECTS = [
+    'Question générale',
+    'Partenariat / Collaboration',
+    'Don / Financement',
+    'Bénévolat / Ambassadeur',
+    'Médias / Presse',
+]
+
+
+def _strip_html(value: str) -> str:
+    return re.sub(r'<[^>]+>', '', value)
+
 
 def _serialize_image(image: ImageAsset, request):
     return {
@@ -35,7 +57,6 @@ def image_detail(request, image_id: int):
         return JsonResponse({"detail": "Not found."}, status=404)
     return JsonResponse(_serialize_image(image, request))
 
-# ── Video serialisation & views ──────────────────────────
 
 def _serialize_video(video: VideoAsset, request):
     data = {
@@ -68,34 +89,74 @@ def video_detail(request, video_id: int):
         return JsonResponse({"detail": "Not found."}, status=404)
     return JsonResponse(_serialize_video(video, request))
 
-# ── Contact view ──────────────────────────
 
 @csrf_exempt
 def contact(request):
     if request.method != 'POST':
         return JsonResponse({'detail': 'Method not allowed.'}, status=405)
-    
+
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
         return JsonResponse({'detail': 'Invalid JSON.'}, status=400)
-    
-    name = data.get('name', '').strip()
-    email = data.get('email', '').strip()
-    message = data.get('message', '').strip()
-    
-    if not all([name, email, message]):
-        return JsonResponse({'detail': 'name, email and message are required.'}, status=400)
-    
+
+    name = _strip_html(data.get('name', '')).strip()
+    email = _strip_html(data.get('email', '')).strip()
+    subject = _strip_html(data.get('subject', '')).strip()
+    custom_subject = _strip_html(data.get('customSubject', '')).strip()
+    message = _strip_html(data.get('message', '')).strip()
+
+    errors = {}
+
+    if not name:
+        errors['name'] = 'Le nom est requis.'
+    elif len(name) > MAX_NAME:
+        errors['name'] = f'Le nom ne doit pas dépasser {MAX_NAME} caractères.'
+
+    if not email:
+        errors['email'] = "L'adresse courriel est requise."
+    elif len(email) > MAX_EMAIL:
+        errors['email'] = f"L'adresse courriel ne doit pas dépasser {MAX_EMAIL} caractères."
+    else:
+        try:
+            validate_email(email)
+        except ValidationError:
+            errors['email'] = "L'adresse courriel n'est pas valide."
+
+    if not subject:
+        errors['subject'] = 'Le sujet est requis.'
+    elif subject == 'Autre':
+        if not custom_subject:
+            errors['customSubject'] = 'Veuillez préciser le sujet.'
+        elif len(custom_subject) > MAX_SUBJECT:
+            errors['customSubject'] = f'Le sujet ne doit pas dépasser {MAX_SUBJECT} caractères.'
+    elif subject not in VALID_SUBJECTS:
+        errors['subject'] = 'Sujet invalide.'
+
+    if not message:
+        errors['message'] = 'Le message est requis.'
+    elif len(message) > MAX_MESSAGE:
+        errors['message'] = f'Le message ne doit pas dépasser {MAX_MESSAGE} caractères.'
+
+    if errors:
+        return JsonResponse({'errors': errors}, status=400)
+
+    resolved_subject = custom_subject if subject == 'Autre' else subject
+    email_subject = f'Contact ForceRare — {resolved_subject}'
+
     try:
         send_mail(
-            subject=f'Contact ForceRare - {name}',
+            subject=email_subject,
             message=f'De: {name} <{email}>\n\n{message}',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.CONTACT_EMAIL],
             fail_silently=False,
         )
-    except Exception as e:
-        return JsonResponse({'detail': str(e)}, status=500)
-    
-    return JsonResponse({'detail': 'Message sent successfully.'}, status=200)
+    except Exception as exc:
+        logger.error('Contact email failed: %s', exc)
+        return JsonResponse(
+            {'detail': "Erreur lors de l'envoi du courriel. Veuillez réessayer plus tard."},
+            status=500,
+        )
+
+    return JsonResponse({'detail': 'Message envoyé avec succès.'}, status=200)

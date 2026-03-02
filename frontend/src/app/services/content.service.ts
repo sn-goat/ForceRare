@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
 
-/* ================================================================
-   INTERFACES
-   ================================================================ */
-
-/* --- Home page --- */
-
 export interface HeroContent {
   title: string;
   tagline: string;
@@ -65,8 +59,6 @@ export interface HomeContent {
   partners: PartnersPreviewContent;
 }
 
-/* --- Shared data --- */
-
 export interface NavLink {
   label: string;
   route: string;
@@ -95,8 +87,6 @@ export interface PartnerInfo {
   websiteUrl: string;
   websiteLabel: string;
 }
-
-/* --- Page content --- */
 
 export interface PageHeroContent {
   title: string;
@@ -199,10 +189,12 @@ export interface NousJoindreContent {
   hero: PageHeroContent;
   formHeading: string;
   successMessage: string;
+  subjectOptions: string[];
   labels: {
     name: string;
     email: string;
     subject: string;
+    customSubject: string;
     message: string;
     submit: string;
   };
@@ -210,6 +202,7 @@ export interface NousJoindreContent {
     name: string;
     email: string;
     subject: string;
+    customSubject: string;
     message: string;
   };
   sidebar: {
@@ -259,20 +252,11 @@ export interface FooterContent {
   socialLinks: { label: string; url: string; icon: string }[];
 }
 
-/* ================================================================
-   SERVICE
-   ================================================================ */
-
 @Injectable({ providedIn: 'root' })
 export class ContentService {
 
-  /** Zeffy donation URL */
   readonly donateUrl =
     'https://www.zeffy.com/donation-form/au-dela-du-terrain';
-
-  /* -------------------------------------------------------------- */
-  /*  Navigation                                                     */
-  /* -------------------------------------------------------------- */
 
   getNavLinks(): NavLink[] {
     return [
@@ -285,10 +269,6 @@ export class ContentService {
       { label: 'Nous joindre', route: '/nous-joindre' },
     ];
   }
-
-  /* -------------------------------------------------------------- */
-  /*  Shared data (single source of truth)                           */
-  /* -------------------------------------------------------------- */
 
   getFounders(): FounderInfo[] {
     return [
@@ -388,10 +368,6 @@ export class ContentService {
     ];
   }
 
-  /* -------------------------------------------------------------- */
-  /*  Home page                                                      */
-  /* -------------------------------------------------------------- */
-
   getHome(): HomeContent {
     return {
       hero: {
@@ -406,8 +382,8 @@ export class ContentService {
         cta: 'En savoir plus',
       },
       videoShowcase: {
-        heading: 'Pourquoi Force Rare?',
-        subtext: 'Découvrez l\'histoire derrière notre mouvement.',
+        heading: 'Qu\'est-ce que le projet Force Rare?',
+        subtext: 'Une initiative pour mettre en avant les maladies rares',
       },
       stats: {
         heading: 'Notre impact',
@@ -442,10 +418,6 @@ export class ContentService {
     };
   }
 
-  /* -------------------------------------------------------------- */
-  /*  Footer                                                         */
-  /* -------------------------------------------------------------- */
-
   getFooter(): FooterContent {
     return {
       tagline: 'Au-delà du terrain — Pour les enfants atteints de maladies rares.',
@@ -458,10 +430,6 @@ export class ContentService {
       ],
     };
   }
-
-  /* -------------------------------------------------------------- */
-  /*  FAQ                                                            */
-  /* -------------------------------------------------------------- */
 
   getFaq(): FaqItem[] {
     return [
@@ -491,10 +459,6 @@ export class ContentService {
       },
     ];
   }
-
-  /* -------------------------------------------------------------- */
-  /*  Notre histoire page                                            */
-  /* -------------------------------------------------------------- */
 
   getNotreHistoire(): NotreHistoireContent {
     return {
@@ -564,10 +528,6 @@ export class ContentService {
     };
   }
 
-  /* -------------------------------------------------------------- */
-  /*  Notre mission page                                             */
-  /* -------------------------------------------------------------- */
-
   getNotreMission(): NotreMissionContent {
     return {
       hero: {
@@ -636,10 +596,6 @@ export class ContentService {
     };
   }
 
-  /* -------------------------------------------------------------- */
-  /*  Notre équipe page                                              */
-  /* -------------------------------------------------------------- */
-
   getNotreEquipe(): NotreEquipeContent {
     return {
       hero: {
@@ -662,10 +618,6 @@ export class ContentService {
     };
   }
 
-  /* -------------------------------------------------------------- */
-  /*  Nos partenaires page                                           */
-  /* -------------------------------------------------------------- */
-
   getNosPartenaires(): NosPartenairesContent {
     return {
       hero: {
@@ -685,10 +637,6 @@ export class ContentService {
       },
     };
   }
-
-  /* -------------------------------------------------------------- */
-  /*  Collaborer page                                                */
-  /* -------------------------------------------------------------- */
 
   getCollaborer(): CollaborerContent {
     return {
@@ -725,10 +673,6 @@ export class ContentService {
     };
   }
 
-  /* -------------------------------------------------------------- */
-  /*  Nous joindre page                                              */
-  /* -------------------------------------------------------------- */
-
   getNousJoindre(): NousJoindreContent {
     return {
       hero: {
@@ -737,23 +681,33 @@ export class ContentService {
       },
       formHeading: 'Envoyez-nous un message',
       successMessage: 'Merci pour votre message! Nous vous répondrons dans les plus brefs délais.',
+      subjectOptions: [
+        'Question générale',
+        'Partenariat / Collaboration',
+        'Don / Financement',
+        'Bénévolat / Ambassadeur',
+        'Médias / Presse',
+        'Autre',
+      ],
       labels: {
         name: 'Nom complet',
         email: 'Courriel',
         subject: 'Sujet',
+        customSubject: 'Précisez le sujet',
         message: 'Message',
         submit: 'Envoyer',
       },
       placeholders: {
         name: 'Votre nom',
         email: 'votre@courriel.com',
-        subject: 'Ex.\u00a0: Devenir ambassadeur',
+        subject: 'Sélectionnez un sujet',
+        customSubject: 'Décrivez brièvement votre demande',
         message: 'Votre message...',
       },
       sidebar: {
         coordTitle: 'Coordonnées',
         emailLabel: 'Courriel',
-        email: 'info@forcerare.ca',
+        email: 'faq.force.rare@gmail.com',
         socialTitle: 'Réseaux sociaux',
         topicsTitle: 'Sujets fréquents',
         topics: [
@@ -766,10 +720,6 @@ export class ContentService {
       },
     };
   }
-
-  /* -------------------------------------------------------------- */
-  /*  Faire un don page                                              */
-  /* -------------------------------------------------------------- */
 
   getFaireUnDon(): FaireUnDonContent {
     return {

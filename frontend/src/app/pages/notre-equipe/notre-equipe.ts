@@ -3,7 +3,6 @@ import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 import { PageHeroComponent } from '../../components/page-hero/page-hero';
-import { FaqComponent } from '../../components/faq/faq';
 import { CtaBannerComponent } from '../../components/cta-banner/cta-banner';
 import { ImageService } from '../../services/image.service';
 import { ImageAsset } from '../../models/image-asset';
@@ -12,7 +11,7 @@ import { ContentService, NotreEquipeContent, FounderInfo } from '../../services/
 @Component({
   selector: 'app-notre-equipe',
   standalone: true,
-  imports: [RouterLink, NgOptimizedImage, PageHeroComponent, FaqComponent, CtaBannerComponent],
+  imports: [RouterLink, NgOptimizedImage, PageHeroComponent, CtaBannerComponent],
   templateUrl: './notre-equipe.html',
   styleUrl: './notre-equipe.scss',
 })

@@ -9,19 +9,6 @@
   &--has-bg {
     padding: calc(var(--navbar-height) + 5rem) 1.5rem 5rem;
   }
-
-  // Decorative bottom wave
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 40px;
-    background: var(--color-surface);
-    clip-path: ellipse(55% 100% at 50% 100%);
-    z-index: 3;
-  }
 }
 
 .page-hero__bg-image {

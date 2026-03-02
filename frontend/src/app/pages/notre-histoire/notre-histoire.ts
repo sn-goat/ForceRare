@@ -2,8 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 
 import { PageHeroComponent } from '../../components/page-hero/page-hero';
-import { FaqComponent } from '../../components/faq/faq';
 import { CtaBannerComponent } from '../../components/cta-banner/cta-banner';
+import { VideoShowcaseComponent } from '../../components/video-showcase/video-showcase';
 import { ContentService, NotreHistoireContent } from '../../services/content.service';
 import { ImageService } from '../../services/image.service';
 import { ImageAsset } from '../../models/image-asset';
@@ -11,7 +11,7 @@ import { ImageAsset } from '../../models/image-asset';
 @Component({
   selector: 'app-notre-histoire',
   standalone: true,
-  imports: [NgOptimizedImage, PageHeroComponent, FaqComponent, CtaBannerComponent],
+  imports: [NgOptimizedImage, PageHeroComponent, CtaBannerComponent, VideoShowcaseComponent],
   templateUrl: './notre-histoire.html',
   styleUrl: './notre-histoire.scss',
 })
@@ -28,7 +28,6 @@ export class NotreHistoireComponent implements OnInit {
   ngOnInit(): void {
     this.imageService.getAll('general').subscribe({
       next: (images: ImageAsset[]) => {
-        // Use football/field image for hero background
         const field = images.find(
           (img) =>
             img.title.toLowerCase().includes('football') ||
@@ -37,7 +36,6 @@ export class NotreHistoireComponent implements OnInit {
         if (field) {
           this.heroImage.set(field.url);
         }
-        // Use team image for inline story illustration
         const team = images.find(
           (img) =>
             img.title.toLowerCase().includes('team') ||

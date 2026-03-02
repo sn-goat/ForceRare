@@ -1,14 +1,13 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 
 import { PageHeroComponent } from '../../components/page-hero/page-hero';
-import { FaqComponent } from '../../components/faq/faq';
 import { ContentService, FaireUnDonContent } from '../../services/content.service';
 import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-faire-un-don',
   standalone: true,
-  imports: [PageHeroComponent, FaqComponent],
+  imports: [PageHeroComponent],
   templateUrl: './faire-un-don.html',
   styleUrl: './faire-un-don.scss',
 })

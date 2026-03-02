@@ -33,7 +33,6 @@ export class ImpactStatsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Initialise all counters to 0
     this.animatedValues.set(this.stats.items.map(() => 0));
   }
 
@@ -71,7 +70,6 @@ export class ImpactStatsComponent implements OnInit, OnDestroy {
     const interval = setInterval(() => {
       frame++;
       const progress = frame / totalFrames;
-      // Ease-out cubic
       const ease = 1 - Math.pow(1 - progress, 3);
 
       const newValues = this.stats.items.map((item) =>
@@ -81,7 +79,6 @@ export class ImpactStatsComponent implements OnInit, OnDestroy {
 
       if (frame >= totalFrames) {
         clearInterval(interval);
-        // Ensure exact final values
         this.animatedValues.set(this.stats.items.map((item) => item.value));
       }
     }, 1000 / fps);

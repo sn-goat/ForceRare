@@ -1,4 +1,5 @@
 import io
+import json
 import shutil
 import tempfile
 
@@ -25,9 +26,6 @@ def _create_test_video(name="test.mp4"):
     return SimpleUploadedFile(name, b"\x00" * 64, content_type="video/mp4")
 
 
-# ──────────────────────────────────────────────
-# Model unit tests
-# ──────────────────────────────────────────────
 @override_settings(MEDIA_ROOT=TEMP_MEDIA)
 class ImageAssetModelTest(TestCase):
 
@@ -70,9 +68,9 @@ class ImageAssetModelTest(TestCase):
         b = self._create(title="B", display_order=1)
         c = self._create(title="C", display_order=1)
         ordered = list(ImageAsset.objects.values_list("pk", flat=True))
-        self.assertEqual(ordered[0], c.pk)  # order=1, newest
-        self.assertEqual(ordered[1], b.pk)  # order=1, older
-        self.assertEqual(ordered[2], a.pk)  # order=2
+        self.assertEqual(ordered[0], c.pk)
+        self.assertEqual(ordered[1], b.pk)
+        self.assertEqual(ordered[2], a.pk)
 
     def test_file_stored_under_uploads_images(self):
         img = self._create()
@@ -87,9 +85,6 @@ class ImageAssetModelTest(TestCase):
         self.assertEqual(img.category, "hero")
 
 
-# ──────────────────────────────────────────────
-# API delivery layer tests
-# ──────────────────────────────────────────────
 @override_settings(MEDIA_ROOT=TEMP_MEDIA)
 class ImageListAPITest(TestCase):
 
@@ -233,9 +228,6 @@ class ImageDetailAPITest(TestCase):
         self.assertEqual(resp.status_code, 405)
 
 
-# ──────────────────────────────────────────────
-# Admin registration tests
-# ──────────────────────────────────────────────
 class ImageAssetAdminTest(SimpleTestCase):
 
     def setUp(self):
@@ -256,9 +248,6 @@ class ImageAssetAdminTest(SimpleTestCase):
         self.assertIn("category", self.admin.list_filter)
 
 
-# ──────────────────────────────────────────────
-# VideoAsset model tests
-# ──────────────────────────────────────────────
 @override_settings(MEDIA_ROOT=TEMP_MEDIA)
 class VideoAssetModelTest(TestCase):
 
@@ -319,9 +308,6 @@ class VideoAssetModelTest(TestCase):
         self.assertEqual(ordered[2], a.pk)
 
 
-# ──────────────────────────────────────────────
-# Video API delivery layer tests
-# ──────────────────────────────────────────────
 @override_settings(MEDIA_ROOT=TEMP_MEDIA)
 class VideoListAPITest(TestCase):
 
@@ -460,9 +446,6 @@ class VideoDetailAPITest(TestCase):
         self.assertEqual(resp.status_code, 405)
 
 
-# ──────────────────────────────────────────────
-# Video admin tests
-# ──────────────────────────────────────────────
 class VideoAssetAdminTest(SimpleTestCase):
 
     def setUp(self):
@@ -481,3 +464,154 @@ class VideoAssetAdminTest(SimpleTestCase):
     def test_registered_list_filter(self):
         self.assertIn("is_published", self.admin.list_filter)
         self.assertIn("category", self.admin.list_filter)
+
+
+@override_settings(
+    EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
+    CONTACT_EMAIL='test@forcerare.com',
+    DEFAULT_FROM_EMAIL='noreply@forcerare.com',
+)
+class ContactAPITest(SimpleTestCase):
+
+    def _post(self, data):
+        return self.client.post(
+            "/api/contact/",
+            data=json.dumps(data),
+            content_type="application/json",
+        )
+
+    def test_valid_submission_returns_200(self):
+        resp = self._post({"name": "Jean", "email": "jean@test.com", "subject": "Question générale", "message": "Bonjour"})
+        self.assertEqual(resp.status_code, 200)
+
+    def test_valid_submission_with_autre(self):
+        resp = self._post({
+            "name": "Jean",
+            "email": "jean@test.com",
+            "subject": "Autre",
+            "customSubject": "Sujet personnalisé",
+            "message": "Bonjour",
+        })
+        self.assertEqual(resp.status_code, 200)
+
+    def test_get_not_allowed(self):
+        resp = self.client.get("/api/contact/")
+        self.assertEqual(resp.status_code, 405)
+
+    def test_put_not_allowed(self):
+        resp = self.client.put("/api/contact/")
+        self.assertEqual(resp.status_code, 405)
+
+    def test_invalid_json_returns_400(self):
+        resp = self.client.post(
+            "/api/contact/",
+            data="not json",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("detail", resp.json())
+
+    def test_missing_name_returns_error(self):
+        resp = self._post({"email": "a@b.com", "subject": "Question générale", "message": "Hi"})
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("name", resp.json()["errors"])
+
+    def test_missing_email_returns_error(self):
+        resp = self._post({"name": "Jean", "subject": "Question générale", "message": "Hi"})
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("email", resp.json()["errors"])
+
+    def test_missing_message_returns_error(self):
+        resp = self._post({"name": "Jean", "email": "a@b.com", "subject": "Question générale"})
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("message", resp.json()["errors"])
+
+    def test_invalid_email_returns_error(self):
+        resp = self._post({"name": "Jean", "email": "not-an-email", "subject": "Question générale", "message": "Hi"})
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("email", resp.json()["errors"])
+
+    def test_name_too_long(self):
+        resp = self._post({"name": "A" * 101, "email": "a@b.com", "subject": "Question générale", "message": "Hi"})
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("name", resp.json()["errors"])
+
+    def test_email_too_long(self):
+        resp = self._post({"name": "Jean", "email": "a" * 250 + "@b.com", "subject": "Question générale", "message": "Hi"})
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("email", resp.json()["errors"])
+
+    def test_subject_too_long(self):
+        resp = self._post({
+            "name": "Jean",
+            "email": "a@b.com",
+            "subject": "Autre",
+            "customSubject": "X" * 101,
+            "message": "Hi",
+        })
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("customSubject", resp.json()["errors"])
+
+    def test_message_too_long(self):
+        resp = self._post({"name": "Jean", "email": "a@b.com", "subject": "Question générale", "message": "X" * 5001})
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("message", resp.json()["errors"])
+
+    def test_html_stripped_from_name(self):
+        resp = self._post({
+            "name": "<script>alert(1)</script>Jean",
+            "email": "a@b.com",
+            "subject": "Question générale",
+            "message": "Hi",
+        })
+        self.assertEqual(resp.status_code, 200)
+
+    def test_html_stripped_from_message(self):
+        resp = self._post({
+            "name": "Jean",
+            "email": "a@b.com",
+            "subject": "Question générale",
+            "message": "<b>Bold</b> text",
+        })
+        self.assertEqual(resp.status_code, 200)
+
+    def test_multiple_errors_returned(self):
+        resp = self._post({})
+        self.assertEqual(resp.status_code, 400)
+        errors = resp.json()["errors"]
+        self.assertIn("name", errors)
+        self.assertIn("email", errors)
+        self.assertIn("subject", errors)
+        self.assertIn("message", errors)
+
+    def test_missing_subject_returns_error(self):
+        resp = self._post({"name": "Jean", "email": "a@b.com", "message": "Hi"})
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("subject", resp.json()["errors"])
+
+    def test_invalid_subject_returns_error(self):
+        resp = self._post({"name": "Jean", "email": "a@b.com", "subject": "Invalid option", "message": "Hi"})
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("subject", resp.json()["errors"])
+
+    def test_autre_without_custom_subject_returns_error(self):
+        resp = self._post({"name": "Jean", "email": "a@b.com", "subject": "Autre", "message": "Hi"})
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("customSubject", resp.json()["errors"])
+
+    def test_all_valid_subjects_accepted(self):
+        for subject in [
+            "Question générale",
+            "Partenariat / Collaboration",
+            "Don / Financement",
+            "Bénévolat / Ambassadeur",
+            "Médias / Presse",
+        ]:
+            resp = self._post({"name": "Jean", "email": "a@b.com", "subject": subject, "message": "Hi"})
+            self.assertEqual(resp.status_code, 200, f"Subject '{subject}' should be accepted")
+
+    def test_response_does_not_leak_exception(self):
+        resp = self._post({"name": "Jean", "email": "a@b.com", "subject": "Question générale", "message": "Hi"})
+        body = resp.json()
+        self.assertNotIn("Traceback", str(body))
+        self.assertNotIn("Exception", str(body))

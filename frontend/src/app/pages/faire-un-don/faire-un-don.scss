@@ -1,7 +1,3 @@
-/* ============================================================
-   FAIRE UN DON — Page-specific styles
-   ============================================================ */
-
 .donate-section {
   background: var(--color-surface);
 
@@ -26,8 +22,6 @@
   font-size: clamp(1.5rem, 3.5vw, 2rem);
   color: var(--color-text);
   margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 2px solid var(--color-primary);
   display: inline-block;
 }
 
@@ -50,7 +44,6 @@
   margin-top: 0.75rem;
 }
 
-/* Impact sidebar */
 .donate-impact {
   display: flex;
   flex-direction: column;
@@ -74,11 +67,10 @@
   background: var(--color-surface-alt);
   border-radius: var(--border-radius);
   border: 1px solid rgba(0, 0, 0, 0.04);
-  transition: box-shadow var(--transition-speed), transform var(--transition-speed);
+  transition: box-shadow var(--transition-speed);
 
   &:hover {
     box-shadow: var(--shadow-sm);
-    transform: translateY(-2px);
   }
 
   strong {
@@ -113,7 +105,6 @@
   letter-spacing: -0.02em;
 }
 
-/* Other ways */
 .other-ways {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

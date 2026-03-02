@@ -4,7 +4,6 @@ import { HeroComponent } from '../../components/hero/hero';
 import { VideoShowcaseComponent } from '../../components/video-showcase/video-showcase';
 import { AboutPreviewComponent } from '../../components/about-preview/about-preview';
 import { ImpactStatsComponent } from '../../components/impact-stats/impact-stats';
-import { MissionSectionComponent } from '../../components/mission-section/mission-section';
 import { PartnersStripComponent } from '../../components/partners-strip/partners-strip';
 import { CtaBannerComponent } from '../../components/cta-banner/cta-banner';
 import { FaqComponent } from '../../components/faq/faq';
@@ -17,7 +16,6 @@ import { FaqComponent } from '../../components/faq/faq';
     VideoShowcaseComponent,
     AboutPreviewComponent,
     ImpactStatsComponent,
-    MissionSectionComponent,
     PartnersStripComponent,
     CtaBannerComponent,
     FaqComponent,

@@ -2,7 +2,6 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PageHeroComponent } from '../../components/page-hero/page-hero';
-import { FaqComponent } from '../../components/faq/faq';
 import { CtaBannerComponent } from '../../components/cta-banner/cta-banner';
 import { ContentService, CollaborerContent } from '../../services/content.service';
 import { ImageService } from '../../services/image.service';
@@ -10,7 +9,7 @@ import { ImageService } from '../../services/image.service';
 @Component({
   selector: 'app-collaborer',
   standalone: true,
-  imports: [RouterLink, PageHeroComponent, FaqComponent, CtaBannerComponent],
+  imports: [RouterLink, PageHeroComponent, CtaBannerComponent],
   templateUrl: './collaborer.html',
   styleUrl: './collaborer.scss',
 })

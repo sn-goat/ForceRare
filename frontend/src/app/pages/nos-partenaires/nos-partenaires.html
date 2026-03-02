@@ -4,7 +4,6 @@
   [backgroundImage]="heroImage()"
 />
 
-<!-- Intro -->
 <section class="section content-section">
   <div class="section__inner content-narrow">
     <div class="accent-bar"></div>
@@ -15,7 +14,6 @@
   </div>
 </section>
 
-<!-- Partner sections -->
 @for (partner of partners; track partner.name; let i = $index; let odd = $odd) {
   <section class="section content-section" [class.content-section--alt]="odd" [id]="partner.name | lowercase">
     <div class="section__inner content-narrow">
@@ -42,7 +40,6 @@
   </section>
 }
 
-<!-- Integrity -->
 <section class="section content-section content-section--dark">
   <div class="section__inner content-narrow" style="text-align: center;">
     <h2 class="content-heading content-heading--light">{{ page.integrity.heading }}</h2>
@@ -57,5 +54,4 @@
   </div>
 </section>
 
-<app-faq />
 <app-cta-banner />

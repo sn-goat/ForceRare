@@ -28,7 +28,6 @@
   height: var(--navbar-height);
 }
 
-/* Logo */
 .navbar__logo {
   display: flex;
   align-items: center;
@@ -44,7 +43,6 @@
   text-transform: uppercase;
 }
 
-/* Desktop links */
 .navbar__links {
   display: flex;
   gap: 1.25rem;
@@ -93,7 +91,6 @@
   }
 }
 
-/* Desktop CTA */
 .navbar__cta {
   font-size: 0.8rem;
   padding: 0.55rem 1.3rem;
@@ -103,7 +100,6 @@
   }
 }
 
-/* Hamburger */
 .navbar__burger {
   display: none;
   flex-direction: column;
@@ -139,7 +135,6 @@
   }
 }
 
-/* Mobile drawer */
 .navbar__mobile {
   position: fixed;
   inset: 0;

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';  // ← AJOUTÉ
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 import { PageHeroComponent } from '../../components/page-hero/page-hero';
 import { FaqComponent } from '../../components/faq/faq';
@@ -10,28 +10,36 @@ import { ImageService } from '../../services/image.service';
 @Component({
   selector: 'app-nous-joindre',
   standalone: true,
-  imports: [FormsModule, PageHeroComponent, FaqComponent],
+  imports: [ReactiveFormsModule, PageHeroComponent, FaqComponent],
   templateUrl: './nous-joindre.html',
   styleUrl: './nous-joindre.scss',
 })
 export class NousJoindreComponent implements OnInit {
   private readonly content = inject(ContentService);
   private readonly imageService = inject(ImageService);
-  private readonly http = inject(HttpClient);  // ← AJOUTÉ
+  private readonly http = inject(HttpClient);
+  private readonly fb = inject(FormBuilder);
 
   readonly page: NousJoindreContent = this.content.getNousJoindre();
   readonly footer = this.content.getFooter();
   readonly submitted = signal(false);
-  readonly loading = signal(false);  // ← AJOUTÉ
-  readonly error = signal<string | null>(null);  // ← AJOUTÉ
+  readonly loading = signal(false);
+  readonly error = signal<string | null>(null);
   readonly heroImage = signal<string | null>(null);
+  readonly showCustomSubject = signal(false);
 
-  formData = {
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  };
+  readonly maxName = 100;
+  readonly maxEmail = 254;
+  readonly maxCustomSubject = 100;
+  readonly maxMessage = 5000;
+
+  readonly form: FormGroup = this.fb.group({
+    name: ['', [Validators.required, Validators.maxLength(this.maxName)]],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(this.maxEmail)]],
+    subject: ['', [Validators.required]],
+    customSubject: [''],
+    message: ['', [Validators.required, Validators.maxLength(this.maxMessage)]],
+  });
 
   ngOnInit(): void {
     this.imageService.getAll('general').subscribe({
@@ -46,29 +54,61 @@ export class NousJoindreComponent implements OnInit {
         }
       },
     });
+
+    this.form.get('subject')!.valueChanges.subscribe((value) => {
+      const isAutre = value === 'Autre';
+      this.showCustomSubject.set(isAutre);
+      const ctrl = this.form.get('customSubject')!;
+      if (isAutre) {
+        ctrl.setValidators([Validators.required, Validators.maxLength(this.maxCustomSubject)]);
+      } else {
+        ctrl.clearValidators();
+        ctrl.setValue('');
+      }
+      ctrl.updateValueAndValidity();
+    });
   }
 
-  // ↓ REMPLACE CETTE FONCTION COMPLÈTEMENT ↓
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
+
   onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
     this.loading.set(true);
     this.error.set(null);
 
-    const payload = {
-      name: this.formData.name,
-      email: this.formData.email,
-      message: `${this.formData.subject ? 'Sujet: ' + this.formData.subject + '\n\n' : ''}${this.formData.message}`
-    };
+    const { name, email, subject, customSubject, message } = this.form.value;
 
-    this.http.post('/api/contact/', payload).subscribe({
+    this.http.post<{ detail?: string; errors?: Record<string, string> }>('/api/contact/', {
+      name, email, subject, customSubject, message,
+    }).subscribe({
       next: () => {
         this.submitted.set(true);
         this.loading.set(false);
       },
       error: (err) => {
-        console.error('Erreur envoi email:', err);
-        this.error.set('Une erreur est survenue. Veuillez réessayer plus tard.');
+        if (err.status === 400 && err.error?.errors) {
+          const serverErrors = err.error.errors as Record<string, string>;
+          for (const [field, msg] of Object.entries(serverErrors)) {
+            const ctrl = this.form.get(field);
+            if (ctrl) {
+              ctrl.setErrors({ server: msg });
+            }
+          }
+        } else {
+          this.error.set('Une erreur est survenue. Veuillez réessayer plus tard.');
+        }
         this.loading.set(false);
-      }
+      },
     });
   }
 }

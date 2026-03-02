@@ -1,8 +1,3 @@
-/* ============================================================
-   NOS PARTENAIRES — Page-specific styles
-   ============================================================ */
-
-/* Partner bullet list */
 .partner-list {
   margin: 1.5rem 0;
   display: flex;
@@ -43,7 +38,6 @@
   }
 }
 
-/* Integrity grid */
 .integrity-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -58,8 +52,7 @@
 .integrity-item {
   padding: 1.25rem 1rem;
   background: rgba(255, 255, 255, 0.06);
-  border-top: 2px solid var(--color-accent);
-  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  border-radius: var(--border-radius);
   font-family: var(--font-heading);
   font-size: 0.9rem;
   font-weight: 700;

@@ -1,12 +1,11 @@
 <section class="video-showcase section" id="pourquoi">
   <div class="section__inner">
-    <h2 class="section-heading">{{ videoContent.heading }}</h2>
-    <p class="section-subtext">{{ videoContent.subtext }}</p>
+    <h2 class="section-heading">{{ displayHeading }}</h2>
+    <p class="section-subtext">{{ displaySubtext }}</p>
 
     @if (video(); as v) {
       <div class="video-showcase__player">
         @if (!playing()) {
-          <!-- Thumbnail with play button overlay -->
           <div class="video-showcase__thumbnail" (click)="play()" (keydown.enter)="play()" tabindex="0" role="button" aria-label="Lire la vidéo">
             @if (v.thumbnail_url) {
               <img [ngSrc]="v.thumbnail_url" [alt]="v.title" class="video-showcase__thumb-img" fill />
@@ -21,7 +20,6 @@
             </div>
           </div>
         } @else {
-          <!-- Actual video player -->
           <video
             class="video-showcase__video"
             [src]="v.url"

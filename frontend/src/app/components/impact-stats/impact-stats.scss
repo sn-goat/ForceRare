@@ -1,25 +1,7 @@
-/* ============================================================
-   STATS — Centraide-style dark section with huge numbers
-   ============================================================ */
 .stats {
   background: var(--color-surface-dark);
   padding: 5rem 1.5rem;
   color: var(--color-on-dark);
-  position: relative;
-  overflow: hidden;
-
-  // Subtle radial glow
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(211, 47, 47, 0.06) 0%, transparent 70%);
-    pointer-events: none;
-  }
 
   @media (max-width: 768px) {
     padding: 3rem 1rem;
@@ -30,8 +12,6 @@
   max-width: var(--max-content-width);
   margin: 0 auto;
   text-align: center;
-  position: relative;
-  z-index: 1;
 }
 
 .stats__heading {
@@ -70,7 +50,6 @@
   padding: 2rem 2.5rem;
   position: relative;
 
-  // Vertical dividers between items
   &:not(:last-child)::after {
     content: '';
     position: absolute;

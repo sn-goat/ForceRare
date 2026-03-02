@@ -7,7 +7,6 @@
 <section class="section content-section">
   <div class="section__inner contact-grid">
 
-    <!-- Form -->
     <div class="contact-form-wrap">
       <h2 class="content-heading">{{ page.formHeading }}</h2>
 
@@ -16,71 +15,143 @@
           <p>{{ page.successMessage }}</p>
         </div>
       } @else {
-        <form class="contact-form" (ngSubmit)="onSubmit()" #contactForm="ngForm">
+        <form class="contact-form" [formGroup]="form" (ngSubmit)="onSubmit()">
 
-          <!-- Message d'erreur -->
           @if (error()) {
             <div class="contact-error">
               <p>{{ error() }}</p>
             </div>
           }
 
-          <!-- Champ Nom -->
-          <div class="form-group">
+          <div class="form-group" [class.form-group--error]="form.get('name')!.invalid && form.get('name')!.touched">
             <label for="name">{{ page.labels.name }}</label>
             <input
               id="name"
               type="text"
-              [(ngModel)]="formData.name"
-              name="name"
-              required
+              formControlName="name"
+              [maxlength]="maxName"
               [placeholder]="page.placeholders.name"
             />
+            <span class="form-counter">
+              {{ form.get('name')!.value?.length || 0 }} / {{ maxName }}
+            </span>
+            @if (form.get('name')!.touched && form.get('name')!.errors) {
+              <span class="form-error">
+                @if (form.get('name')!.errors?.['required']) {
+                  Le nom est requis.
+                } @else if (form.get('name')!.errors?.['maxlength']) {
+                  Maximum {{ maxName }} caractères.
+                } @else if (form.get('name')!.errors?.['server']) {
+                  {{ form.get('name')!.errors?.['server'] }}
+                }
+              </span>
+            }
           </div>
 
-          <!-- Champ Email -->
-          <div class="form-group">
+          <div class="form-group" [class.form-group--error]="form.get('email')!.invalid && form.get('email')!.touched">
             <label for="email">{{ page.labels.email }}</label>
             <input
               id="email"
               type="email"
-              [(ngModel)]="formData.email"
-              name="email"
-              required
+              formControlName="email"
+              [maxlength]="maxEmail"
               [placeholder]="page.placeholders.email"
             />
+            @if (form.get('email')!.touched && form.get('email')!.errors) {
+              <span class="form-error">
+                @if (form.get('email')!.errors?.['required']) {
+                  L'adresse courriel est requise.
+                } @else if (form.get('email')!.errors?.['email']) {
+                  Format de courriel invalide.
+                } @else if (form.get('email')!.errors?.['maxlength']) {
+                  Maximum {{ maxEmail }} caractères.
+                } @else if (form.get('email')!.errors?.['server']) {
+                  {{ form.get('email')!.errors?.['server'] }}
+                }
+              </span>
+            }
           </div>
 
-          <!-- Champ Sujet -->
-          <div class="form-group">
+          <div class="form-group" [class.form-group--error]="form.get('subject')!.invalid && form.get('subject')!.touched">
             <label for="subject">{{ page.labels.subject }}</label>
-            <input
+            <select
               id="subject"
-              type="text"
-              [(ngModel)]="formData.subject"
-              name="subject"
-              [placeholder]="page.placeholders.subject"
-            />
+              formControlName="subject"
+            >
+              <option value="" disabled>{{ page.placeholders.subject }}</option>
+              @for (opt of page.subjectOptions; track opt) {
+                <option [value]="opt">{{ opt }}</option>
+              }
+            </select>
+            @if (form.get('subject')!.touched && form.get('subject')!.errors) {
+              <span class="form-error">
+                @if (form.get('subject')!.errors?.['required']) {
+                  Le sujet est requis.
+                } @else if (form.get('subject')!.errors?.['server']) {
+                  {{ form.get('subject')!.errors?.['server'] }}
+                }
+              </span>
+            }
           </div>
 
-          <!-- Champ Message -->
-          <div class="form-group">
+          @if (showCustomSubject()) {
+            <div class="form-group" [class.form-group--error]="form.get('customSubject')!.invalid && form.get('customSubject')!.touched">
+              <label for="customSubject">{{ page.labels.customSubject }}</label>
+              <input
+                id="customSubject"
+                type="text"
+                formControlName="customSubject"
+                [maxlength]="maxCustomSubject"
+                [placeholder]="page.placeholders.customSubject"
+              />
+              <span class="form-counter">
+                {{ form.get('customSubject')!.value?.length || 0 }} / {{ maxCustomSubject }}
+              </span>
+              @if (form.get('customSubject')!.touched && form.get('customSubject')!.errors) {
+                <span class="form-error">
+                  @if (form.get('customSubject')!.errors?.['required']) {
+                    Veuillez préciser le sujet.
+                  } @else if (form.get('customSubject')!.errors?.['maxlength']) {
+                    Maximum {{ maxCustomSubject }} caractères.
+                  } @else if (form.get('customSubject')!.errors?.['server']) {
+                    {{ form.get('customSubject')!.errors?.['server'] }}
+                  }
+                </span>
+              }
+            </div>
+          }
+
+          <div class="form-group" [class.form-group--error]="form.get('message')!.invalid && form.get('message')!.touched">
             <label for="message">{{ page.labels.message }}</label>
             <textarea
               id="message"
-              [(ngModel)]="formData.message"
-              name="message"
-              required
+              formControlName="message"
+              [maxlength]="maxMessage"
               rows="6"
               [placeholder]="page.placeholders.message"
+              (drop)="onDrop($event)"
+              (dragover)="onDragOver($event)"
             ></textarea>
+            <span class="form-counter">
+              {{ form.get('message')!.value?.length || 0 }} / {{ maxMessage }}
+            </span>
+            @if (form.get('message')!.touched && form.get('message')!.errors) {
+              <span class="form-error">
+                @if (form.get('message')!.errors?.['required']) {
+                  Le message est requis.
+                } @else if (form.get('message')!.errors?.['maxlength']) {
+                  Maximum {{ maxMessage }} caractères.
+                } @else if (form.get('message')!.errors?.['server']) {
+                  {{ form.get('message')!.errors?.['server'] }}
+                }
+              </span>
+            }
           </div>
 
-          <!-- Bouton Submit (UN SEUL !) -->
           <button
             class="btn-primary contact-form__submit"
             type="submit"
-            [disabled]="!contactForm.valid || loading()">
+            [disabled]="form.invalid || loading()">
             {{ loading() ? 'Envoi en cours...' : page.labels.submit }}
           </button>
 
@@ -88,7 +159,6 @@
       }
     </div>
 
-    <!-- Sidebar -->
     <aside class="contact-sidebar">
       <div class="contact-info-card">
         <h3>{{ page.sidebar.coordTitle }}</h3>

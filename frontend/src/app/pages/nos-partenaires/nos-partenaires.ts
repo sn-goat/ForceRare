@@ -2,7 +2,6 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { LowerCasePipe } from '@angular/common';
 
 import { PageHeroComponent } from '../../components/page-hero/page-hero';
-import { FaqComponent } from '../../components/faq/faq';
 import { CtaBannerComponent } from '../../components/cta-banner/cta-banner';
 import { ContentService, NosPartenairesContent, PartnerInfo } from '../../services/content.service';
 import { ImageService } from '../../services/image.service';
@@ -10,7 +9,7 @@ import { ImageService } from '../../services/image.service';
 @Component({
   selector: 'app-nos-partenaires',
   standalone: true,
-  imports: [LowerCasePipe, PageHeroComponent, FaqComponent, CtaBannerComponent],
+  imports: [LowerCasePipe, PageHeroComponent, CtaBannerComponent],
   templateUrl: './nos-partenaires.html',
   styleUrl: './nos-partenaires.scss',
 })

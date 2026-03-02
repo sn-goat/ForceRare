@@ -4,7 +4,6 @@
   [backgroundImage]="heroImage()"
 />
 
-<!-- Intro -->
 <section class="section content-section">
   <div class="section__inner content-narrow">
     <div class="accent-bar"></div>
@@ -15,7 +14,6 @@
   </div>
 </section>
 
-<!-- Qu'est-ce que Force Rare? -->
 <section class="section content-section content-section--alt" id="quest-ce-que">
   <div class="section__inner content-narrow">
     <h2 class="content-heading">{{ page.whatIs.heading }}</h2>
@@ -25,7 +23,6 @@
   </div>
 </section>
 
-<!-- Comment tout a commencé -->
 <section class="section content-section" id="comment-commence">
   <div class="section__inner content-narrow">
     <h2 class="content-heading">{{ page.howStarted.heading }}</h2>
@@ -46,7 +43,6 @@
   </div>
 </section>
 
-<!-- Pillars -->
 <section class="section content-section content-section--dark" id="piliers">
   <div class="section__inner content-narrow">
     <h2 class="content-heading content-heading--light">{{ page.pillars.heading }}</h2>
@@ -58,7 +54,6 @@
   </div>
 </section>
 
-<!-- Pourquoi Force Rare est différent -->
 <section class="section content-section content-section--alt" id="pourquoi-different">
   <div class="section__inner content-narrow">
     <h2 class="content-heading">{{ page.whyDifferent.heading }}</h2>
@@ -74,7 +69,6 @@
   </div>
 </section>
 
-<!-- Notre vision du futur -->
 <section class="section content-section" id="vision">
   <div class="section__inner content-narrow">
     <h2 class="content-heading">{{ page.vision.heading }}</h2>
@@ -92,5 +86,10 @@
   </div>
 </section>
 
-<app-faq />
+<app-video-showcase
+  [videoIndex]="1"
+  heading="Notre vidéo"
+  subtext="Découvrez Force Rare en images."
+/>
+
 <app-cta-banner />
