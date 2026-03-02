@@ -653,7 +653,7 @@ export class ContentService {
           'Force Rare se développe avec une structure réfléchie, un souci d\'intégrité et une volonté de professionnalisme alignée avec les standards des grandes organisations philanthropiques.',
         ],
       },
-      foundersHeading: 'Les fondateurs',
+      foundersHeading: 'Les fondateurs et l\'équipe',
       ambassador: {
         heading: 'Un ambassadeur dans chaque équipe',
         body: 'Nous croyons que l\'impact réel et durable passe par la proximité et l\'engagement continu. Intégrer un ambassadeur officiel au sein de chaque équipe sportive permet de créer un réseau de leaders qui portent activement la mission Force Rare toute l\'année.',

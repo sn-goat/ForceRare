@@ -1,4 +1,4 @@
-# Frontend Architecture (v3)
+# Frontend Architecture (v4)
 
 ## Goal
 Mobile-first charity website for **Force Rare** — a student-athlete-led
@@ -113,7 +113,7 @@ AppComponent
 
 | Component | Used by | Props |
 |-----------|---------|-------|
-| `PageHeroComponent` | All 7 secondary pages | `title`, `subtitle` |
+| `PageHeroComponent` | All 7 secondary pages | `title`, `subtitle`, `backgroundImage?` |
 | `FaqComponent` | HomePage + all secondary pages | _(self-contained via ContentService)_ |
 | `CtaBannerComponent` | HomePage + most secondary pages | _(self-contained via ContentService)_ |
 | `TeamSectionComponent` | NotreEquipePage (homepage removed) | _(uses ContentService.getFounders())_ |
@@ -147,7 +147,7 @@ All French text lives in `ContentService`. Templates use data bindings
 
 | Service | Endpoint | Used by |
 |---------|----------|---------|
-| `ImageService` | `GET /api/images/?category=` | NotreEquipePage (founder photos) |
+| `ImageService` | `GET /api/images/?category=` | Hero, AboutPreview, TeamSection, NotreEquipePage, NotreHistoirePage, NotreMissionPage, NosPartenairesPage, CollaborerPage, NousJoindrePage, FaireUnDonPage, PageHero (bg) |
 | `VideoService` | `GET /api/videos/` | VideoShowcaseComponent |
 
 ---
@@ -196,12 +196,13 @@ Nginx proxies `/api/` → backend:8000 and `/media/` → backend:8000.
 - [x] Shared SCSS extracted to global styles
 - [x] Footer nav links from ContentService
 - [x] Impact card emojis replaced with numbered corporate icons
+- [x] Image integration on all secondary pages (hero backgrounds + inline images)
+- [x] Corporate visual refinement (refined shadows, decorative elements, hover effects, section separators)
+- [x] Lazy-load images (`NgOptimizedImage` with `ngSrc` directive on all images)
+- [x] PageHero enhanced with optional background image + overlay + wave separator
 
 ### Planned
-- [ ] Image integration on more secondary pages
-- [ ] Corporate visual refinement (professional charity aesthetic)
-- [ ] Lazy-load images (`NgOptimizedImage`)
-- [ ] i18n prep (if English version needed)
+- [ ] Use relevant images and videos
 - [ ] Backend email endpoint for contact form
 
 ---

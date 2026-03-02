@@ -73,10 +73,12 @@
   padding: 1.25rem;
   background: var(--color-surface-alt);
   border-radius: var(--border-radius);
-  transition: box-shadow var(--transition-speed);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: box-shadow var(--transition-speed), transform var(--transition-speed);
 
   &:hover {
     box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
   }
 
   strong {
@@ -130,6 +132,12 @@
   border-top: 3px solid var(--color-primary);
   box-shadow: var(--shadow-sm);
   text-align: center;
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
 
   h3 {
     font-size: 1.05rem;

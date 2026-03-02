@@ -8,7 +8,7 @@
   <div class="hero__content">
     <!-- Logo -->
     @if (logoUrl(); as url) {
-      <img class="hero__logo" [src]="url" alt="Logo Force Rare" />
+      <img class="hero__logo" [ngSrc]="url" alt="Logo Force Rare" width="180" height="180" priority />
     }
 
     <h1 class="hero__title">{{ hero.title }}</h1>

@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 import { PageHeroComponent } from '../../components/page-hero/page-hero';
@@ -11,7 +12,7 @@ import { ContentService, NotreEquipeContent, FounderInfo } from '../../services/
 @Component({
   selector: 'app-notre-equipe',
   standalone: true,
-  imports: [RouterLink, PageHeroComponent, FaqComponent, CtaBannerComponent],
+  imports: [RouterLink, NgOptimizedImage, PageHeroComponent, FaqComponent, CtaBannerComponent],
   templateUrl: './notre-equipe.html',
   styleUrl: './notre-equipe.scss',
 })

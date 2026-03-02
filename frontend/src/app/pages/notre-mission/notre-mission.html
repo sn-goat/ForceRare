@@ -1,22 +1,38 @@
 <app-page-hero
   [title]="page.hero.title"
   [subtitle]="page.hero.subtitle"
+  [backgroundImage]="heroImage()"
 />
 
 <!-- Mission envers les familles -->
 <section class="section content-section">
-  <div class="section__inner content-narrow">
-    <div class="accent-bar"></div>
-    <h2 class="content-heading">{{ page.mission.heading }}</h2>
-    @for (p of page.mission.paragraphs; track p) {
-      <p class="content-body">{{ p }}</p>
-    }
-    <ul class="check-list">
-      @for (item of page.mission.bullets; track item) {
-        <li>{{ item }}</li>
+  <div class="section__inner">
+    <div class="mission-grid">
+      <div class="mission-grid__text content-narrow">
+        <div class="accent-bar"></div>
+        <h2 class="content-heading">{{ page.mission.heading }}</h2>
+        @for (p of page.mission.paragraphs; track p) {
+          <p class="content-body">{{ p }}</p>
+        }
+        <ul class="check-list">
+          @for (item of page.mission.bullets; track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+        <p class="content-body content-body--accent">{{ page.mission.accent }}</p>
+      </div>
+      @if (missionImage(); as img) {
+        <div class="mission-grid__image">
+          <img
+            class="mission-grid__img"
+            [ngSrc]="img.url"
+            [alt]="img.alt_text || img.title"
+            width="500"
+            height="375"
+          />
+        </div>
       }
-    </ul>
-    <p class="content-body content-body--accent">{{ page.mission.accent }}</p>
+    </div>
   </div>
 </section>
 

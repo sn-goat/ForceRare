@@ -9,9 +9,10 @@
           @if (getFounderImage(founder.name); as img) {
             <img
               class="team__photo"
-              [src]="img.url"
+              [ngSrc]="img.url"
               [alt]="founder.name"
-              loading="lazy"
+              width="300"
+              height="400"
             />
           } @else {
             <div class="team__photo-placeholder">

@@ -40,6 +40,12 @@
   border-radius: var(--border-radius);
   border-top: 3px solid var(--color-primary);
   text-align: center;
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
 
   p {
     font-size: 1.05rem;
@@ -47,4 +53,20 @@
     color: var(--color-text);
     font-weight: 500;
   }
+}
+
+/* Inline story image */
+.story-image {
+  margin-top: 2.5rem;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.story-image__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 16 / 9;
 }

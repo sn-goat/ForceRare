@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 import { ImageService } from '../../services/image.service';
@@ -8,7 +9,7 @@ import { ContentService, FounderInfo } from '../../services/content.service';
 @Component({
   selector: 'app-team-section',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, NgOptimizedImage],
   templateUrl: './team-section.html',
   styleUrl: './team-section.scss',
 })

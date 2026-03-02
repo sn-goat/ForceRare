@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 import { ContentService, HeroContent, MissionContent } from '../../services/content.service';
@@ -8,7 +9,7 @@ import { ImageAsset } from '../../models/image-asset';
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, NgOptimizedImage],
   templateUrl: './hero.html',
   styleUrl: './hero.scss',
 })

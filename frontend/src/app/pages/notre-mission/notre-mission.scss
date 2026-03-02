@@ -2,6 +2,38 @@
    NOTRE MISSION — Page-specific styles
    ============================================================ */
 
+/* Mission text + image grid */
+.mission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  max-width: var(--max-content-width);
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.mission-grid__image {
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+
+  @media (max-width: 900px) {
+    order: -1;
+  }
+}
+
+.mission-grid__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 4 / 3;
+}
+
 /* Check list - uses global .check-list */
 
 /* Ambitions grid */
@@ -22,6 +54,12 @@
   padding: 2rem 1.5rem;
   border-top: 3px solid var(--color-primary);
   box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
 }
 
 .ambition-card__title {

@@ -1,6 +1,7 @@
 <app-page-hero
   [title]="page.hero.title"
   [subtitle]="page.hero.subtitle"
+  [backgroundImage]="heroImage()"
 />
 
 <!-- Intro -->
@@ -30,6 +31,17 @@
     <h2 class="content-heading">{{ page.howStarted.heading }}</h2>
     @for (p of page.howStarted.paragraphs; track p) {
       <p class="content-body">{{ p }}</p>
+    }
+    @if (storyImage(); as img) {
+      <div class="story-image">
+        <img
+          class="story-image__img"
+          [ngSrc]="img.url"
+          [alt]="img.alt_text || img.title"
+          width="820"
+          height="460"
+        />
+      </div>
     }
   </div>
 </section>

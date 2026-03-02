@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 
 import { VideoService } from '../../services/video.service';
 import { VideoAsset } from '../../models/video-asset';
@@ -7,6 +8,7 @@ import { ContentService, VideoShowcaseContent } from '../../services/content.ser
 @Component({
   selector: 'app-video-showcase',
   standalone: true,
+  imports: [NgOptimizedImage],
   templateUrl: './video-showcase.html',
   styleUrl: './video-showcase.scss',
 })

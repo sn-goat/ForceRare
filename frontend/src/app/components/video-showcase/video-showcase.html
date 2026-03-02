@@ -9,7 +9,7 @@
           <!-- Thumbnail with play button overlay -->
           <div class="video-showcase__thumbnail" (click)="play()" (keydown.enter)="play()" tabindex="0" role="button" aria-label="Lire la vidéo">
             @if (v.thumbnail_url) {
-              <img [src]="v.thumbnail_url" [alt]="v.title" class="video-showcase__thumb-img" />
+              <img [ngSrc]="v.thumbnail_url" [alt]="v.title" class="video-showcase__thumb-img" fill />
             } @else {
               <div class="video-showcase__thumb-placeholder"></div>
             }

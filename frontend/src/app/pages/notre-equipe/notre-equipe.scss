@@ -23,11 +23,12 @@
   border-radius: var(--border-radius);
   padding: 2rem;
   box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0, 0, 0, 0.04);
   transition: box-shadow var(--transition-speed), transform var(--transition-speed);
 
   &:hover {
     box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
   }
 
   @media (max-width: 500px) {

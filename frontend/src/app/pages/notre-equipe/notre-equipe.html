@@ -1,6 +1,7 @@
 <app-page-hero
   [title]="page.hero.title"
   [subtitle]="page.hero.subtitle"
+  [backgroundImage]="teamImage()?.url"
 />
 
 <!-- Intro -->
@@ -26,9 +27,10 @@
             @if (getFounderImage(founder.name); as img) {
               <img
                 class="founder-card__photo"
-                [src]="img.url"
+                [ngSrc]="img.url"
                 [alt]="founder.name"
-                loading="lazy"
+                width="120"
+                height="150"
               />
             } @else {
               <div class="founder-card__placeholder">
