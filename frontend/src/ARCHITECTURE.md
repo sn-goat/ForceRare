@@ -200,10 +200,12 @@ Nginx proxies `/api/` → backend:8000 and `/media/` → backend:8000.
 - [x] Corporate visual refinement (refined shadows, decorative elements, hover effects, section separators)
 - [x] Lazy-load images (`NgOptimizedImage` with `ngSrc` directive on all images)
 - [x] PageHero enhanced with optional background image + overlay + wave separator
+- [x] Use relevant images and videos
+- [x] Backend email endpoint for contact form
+
 
 ### Planned
-- [ ] Use relevant images and videos
-- [ ] Backend email endpoint for contact form
+- [ ] Use relevant images, texts and videos
 
 ---
 
