@@ -1,0 +1,69 @@
+<nav class="navbar" [class.navbar--scrolled]="scrolled()" role="navigation">
+  <div class="navbar__inner">
+    <!-- Logo -->
+    <a class="navbar__logo" routerLink="/" (click)="closeMenu()">
+      <span class="navbar__logo-text">FORCE RARE</span>
+    </a>
+
+    <!-- Desktop nav -->
+    <ul class="navbar__links">
+      @for (link of links; track link.label) {
+        <li>
+          <a
+            class="navbar__link"
+            [routerLink]="link.route"
+            [fragment]="link.fragment"
+            routerLinkActive="navbar__link--active"
+            [routerLinkActiveOptions]="{ exact: link.route === '/' && !link.fragment }"
+            (click)="closeMenu()"
+          >
+            {{ link.label }}
+          </a>
+        </li>
+      }
+    </ul>
+
+    <!-- CTA button (desktop) -->
+    <a class="navbar__cta btn-primary" routerLink="/faire-un-don">
+      Faire un don
+    </a>
+
+    <!-- Mobile hamburger -->
+    <button
+      class="navbar__burger"
+      [class.navbar__burger--open]="menuOpen()"
+      (click)="toggleMenu()"
+      aria-label="Menu"
+      [attr.aria-expanded]="menuOpen()"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Mobile drawer -->
+  @if (menuOpen()) {
+    <div class="navbar__mobile" role="dialog" aria-label="Menu de navigation">
+      <ul class="navbar__mobile-links">
+        @for (link of links; track link.label) {
+          <li>
+            <a
+              class="navbar__mobile-link"
+              [routerLink]="link.route"
+              [fragment]="link.fragment"
+              (click)="closeMenu()"
+            >
+              {{ link.label }}
+            </a>
+          </li>
+        }
+        <li>
+          <a class="btn-primary navbar__mobile-cta" routerLink="/faire-un-don" (click)="closeMenu()">
+            Faire un don
+          </a>
+        </li>
+      </ul>
+    </div>
+  }
+</nav>

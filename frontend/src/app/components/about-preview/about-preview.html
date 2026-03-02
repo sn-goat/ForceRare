@@ -1,0 +1,29 @@
+<section class="about section" id="a-propos">
+  <div class="section__inner about__grid">
+    <!-- Text side -->
+    <div class="about__text">
+      <div class="about__accent-bar"></div>
+      <h2 class="about__heading">{{ about.heading }}</h2>
+      <p class="about__body">{{ about.body }}</p>
+      <a class="btn-primary about__cta" routerLink="/notre-histoire">
+        {{ about.cta }}
+      </a>
+    </div>
+
+    <!-- Image side -->
+    <div class="about__image-wrap">
+      @if (aboutImage(); as img) {
+        <div class="about__image-frame">
+          <img
+            class="about__image"
+            [src]="img.url"
+            [alt]="img.alt_text || img.title"
+            loading="lazy"
+          />
+        </div>
+      } @else {
+        <div class="about__image-placeholder"></div>
+      }
+    </div>
+  </div>
+</section>

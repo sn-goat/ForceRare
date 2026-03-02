@@ -1,0 +1,84 @@
+<app-page-hero
+  [title]="page.hero.title"
+  [subtitle]="page.hero.subtitle"
+/>
+
+<!-- Intro -->
+<section class="section content-section">
+  <div class="section__inner content-narrow">
+    <div class="accent-bar"></div>
+    <p class="content-lead">{{ page.intro.lead }}</p>
+    @for (p of page.intro.paragraphs; track p) {
+      <p class="content-body">{{ p }}</p>
+    }
+  </div>
+</section>
+
+<!-- Qu'est-ce que Force Rare? -->
+<section class="section content-section content-section--alt" id="quest-ce-que">
+  <div class="section__inner content-narrow">
+    <h2 class="content-heading">{{ page.whatIs.heading }}</h2>
+    @for (p of page.whatIs.paragraphs; track p) {
+      <p class="content-body">{{ p }}</p>
+    }
+  </div>
+</section>
+
+<!-- Comment tout a commencé -->
+<section class="section content-section" id="comment-commence">
+  <div class="section__inner content-narrow">
+    <h2 class="content-heading">{{ page.howStarted.heading }}</h2>
+    @for (p of page.howStarted.paragraphs; track p) {
+      <p class="content-body">{{ p }}</p>
+    }
+  </div>
+</section>
+
+<!-- Pillars -->
+<section class="section content-section content-section--dark" id="piliers">
+  <div class="section__inner content-narrow">
+    <h2 class="content-heading content-heading--light">{{ page.pillars.heading }}</h2>
+    <ul class="pillar-list">
+      @for (item of page.pillars.items; track item) {
+        <li class="pillar-list__item">{{ item }}</li>
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- Pourquoi Force Rare est différent -->
+<section class="section content-section content-section--alt" id="pourquoi-different">
+  <div class="section__inner content-narrow">
+    <h2 class="content-heading">{{ page.whyDifferent.heading }}</h2>
+    @for (p of page.whyDifferent.paragraphs; track p) {
+      <p class="content-body">{{ p }}</p>
+    }
+    <ul class="check-list">
+      @for (item of page.whyDifferent.list; track item) {
+        <li>{{ item }}</li>
+      }
+    </ul>
+    <p class="content-body content-body--accent">{{ page.whyDifferent.accent }}</p>
+  </div>
+</section>
+
+<!-- Notre vision du futur -->
+<section class="section content-section" id="vision">
+  <div class="section__inner content-narrow">
+    <h2 class="content-heading">{{ page.vision.heading }}</h2>
+    <div class="vision-grid">
+      @for (card of page.vision.cards; track card) {
+        <div class="vision-card">
+          <p>{{ card }}</p>
+        </div>
+      }
+    </div>
+    <p class="content-body" style="text-align: center; margin-top: 2.5rem;">
+      {{ page.vision.closing }}<br>
+      Mais notre ambition est claire&nbsp;: <strong>{{ page.vision.closingBold }}</strong>.
+    </p>
+  </div>
+</section>
+
+<app-faq />
+<app-cta-banner />

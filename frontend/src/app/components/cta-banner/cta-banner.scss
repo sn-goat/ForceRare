@@ -1,0 +1,73 @@
+/* ============================================================
+   CTA BANNER — Bold Centraide-style call to action
+   ============================================================ */
+.cta-banner {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: var(--color-on-primary);
+  padding: 5rem 1.5rem;
+
+  @media (max-width: 768px) {
+    padding: 3.5rem 1rem;
+  }
+}
+
+.cta-banner__inner {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.cta-banner__content {
+  flex: 1;
+}
+
+.cta-banner__heading {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 1rem;
+}
+
+.cta-banner__subtext {
+  font-size: 1.1rem;
+  max-width: 550px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cta-banner__btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem 3rem;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+  background: var(--color-accent);
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  transition: background var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed);
+
+  &:hover {
+    background: var(--color-accent-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

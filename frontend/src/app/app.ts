@@ -1,14 +1,15 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { ImageGalleryComponent } from './components/image-gallery/image-gallery';
+import { NavbarComponent } from './layout/navbar/navbar';
+import { FooterComponent } from './layout/footer/footer';
+import { DonateFabComponent } from './layout/donate-fab/donate-fab';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ImageGalleryComponent],
+  standalone: true,
+  imports: [RouterOutlet, NavbarComponent, FooterComponent, DonateFabComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
-  protected readonly title = signal('ForceRare');
-}
+export class App {}
