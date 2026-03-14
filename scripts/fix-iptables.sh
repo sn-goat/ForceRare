@@ -24,6 +24,6 @@ docker info | grep -i -E "Firewall Backend|iptables"
 
 echo "=== Step 6: Retry compose ==="
 cd /home/snfib/ForceRare
-docker compose up -d
+docker compose up -d --build
 
 echo "=== Done ==="

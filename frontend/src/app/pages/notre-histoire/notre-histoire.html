@@ -43,6 +43,56 @@
   </div>
 </section>
 
+<section class="section content-section content-section--alt" id="histoire-logo">
+  <div class="section__inner logo-story">
+    <div class="logo-story__text">
+      <h2 class="content-heading">{{ page.logoStory.heading }}</h2>
+      <p class="content-body content-body--accent">{{ page.logoStory.creatorLead }}</p>
+      @for (p of page.logoStory.creatorParagraphs; track p) {
+        <p class="content-body">{{ p }}</p>
+      }
+
+      <h3 class="logo-story__subheading">{{ page.logoStory.explanationHeading }}</h3>
+      <div class="logo-story__explanations">
+        @for (item of page.logoStory.explanations; track item.title) {
+          <div class="logo-story__block">
+            <h4 class="logo-story__title">{{ item.title }}</h4>
+            <p class="content-body">{{ item.body }}</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="logo-story__media">
+      @if (logoImage(); as img) {
+        <div class="logo-story__logo-grid">
+          <img
+            class="logo-story__img"
+            [ngSrc]="img.url"
+            [alt]="img.alt_text || img.title"
+            width="720"
+            height="720"
+          />
+        </div>
+      }
+
+      @if (cloeImages().length) {
+        <div class="logo-story__cloe-grid">
+          @for (img of cloeImages(); track img.id) {
+            <img
+              class="logo-story__img logo-story__img--small"
+              [ngSrc]="img.url"
+              [alt]="img.alt_text || img.title"
+              width="380"
+              height="380"
+            />
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
 <section class="section content-section content-section--dark" id="piliers">
   <div class="section__inner content-narrow">
     <h2 class="content-heading content-heading--light">{{ page.pillars.heading }}</h2>

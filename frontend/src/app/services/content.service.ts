@@ -93,11 +93,23 @@ export interface PageHeroContent {
   subtitle: string;
 }
 
+export interface LogoStoryExplanation {
+  title: string;
+  body: string;
+}
+
 export interface NotreHistoireContent {
   hero: PageHeroContent;
   intro: { lead: string; paragraphs: string[] };
   whatIs: { heading: string; paragraphs: string[] };
   howStarted: { heading: string; paragraphs: string[] };
+  logoStory: {
+    heading: string;
+    creatorLead: string;
+    creatorParagraphs: string[];
+    explanationHeading: string;
+    explanations: LogoStoryExplanation[];
+  };
   pillars: { heading: string; items: string[] };
   whyDifferent: {
     heading: string;
@@ -489,6 +501,34 @@ export class ContentService {
           'L\'idée a émergé d\'une réflexion simple\u00a0: comment utiliser l\'influence des équipes sportives universitaires pour soutenir les enfants atteints de maladies rares, une réalité souvent invisible et pourtant extrêmement présente\u00a0?',
           'Ce qui a commencé comme une initiative portée par quelques athlètes engagés s\'est rapidement transformé en un projet structuré, soutenu par des partenaires institutionnels, des fondations et des membres de la communauté universitaire.',
           'Dès le départ, l\'objectif n\'était pas seulement d\'organiser un événement ponctuel, mais de bâtir une plateforme philanthropique pérenne, avec une vision à long terme.',
+        ],
+      },
+      logoStory: {
+        heading: 'L\'histoire de notre logo',
+        creatorLead: 'Force Rare vous présente Cloé St-Gelais, créatrice du logo Force Rare.',
+        creatorParagraphs: [
+          'Cloé est une étudiante en architecture à l\'Université Laval ainsi qu\'une étudiante-athlète engagée au sein de l\'équipe de volleyball du Rouge et Or.',
+          'Depuis sa jeune enfance, elle est animée par la création et le dessin, particulièrement à travers des projets réalisés avec ses mains. Son parcours en architecture lui a permis d\'explorer et de maîtriser de nouveaux médias numériques, incluant les logiciels de dessin vectoriel. Ce qu\'elle aime le plus dans le design graphique, c\'est de conceptualiser des idées pour ensuite leur donner une identité visuelle forte, porteuse de sens et de valeurs.',
+          'Grâce à son sens artistique et à sa capacité de traduire une mission en symbole visuel, Cloé a offert à Force Rare un logo qui incarne l\'authenticité, la sensibilité humaine et la force du collectif. Son engagement sportif nourrit aussi sa discipline et sa vision du travail d\'équipe, des qualités qu\'elle met au service des projets qui rassemblent.',
+        ],
+        explanationHeading: 'Explication du logo',
+        explanations: [
+          {
+            title: 'Reconnaissance aux familles',
+            body: 'Le logo met au centre une silhouette familiale, représentant l\'unité, la force et le soutien collectif. Cela reflète la mission première de Force Rare\u00a0: avancer ensemble, comme famille et comme communauté, afin de créer un impact réel dans la vie des personnes touchées par les maladies rares.',
+          },
+          {
+            title: 'Que veut dire «\u00a0Au-delà du terrain\u00a0»\u00a0?',
+            body: '«\u00a0Au-delà du terrain\u00a0» signifie que notre contribution dépasse le sport. Ce n\'est pas seulement ce que nous accomplissons dans le jeu, mais surtout ce que nous faisons dans la vie\u00a0: soutenir, sensibiliser, donner de la visibilité et faire une différence concrète pour les enfants malades et leurs familles.',
+          },
+          {
+            title: 'Pourquoi le nom Force Rare\u00a0?',
+            body: 'Force Rare symbolise la puissance des causes peu connues, mais essentielles. Les maladies rares sont souvent invisibilisées, alors qu\'elles sont bien réelles et méritent d\'être vues, reconnues et soutenues. Le nom reflète aussi la force unique des enfants, des familles et de toutes les personnes touchées par ces réalités.',
+          },
+          {
+            title: 'Reconnaissance aux étudiant-athlètes',
+            body: 'Les silhouettes levées ainsi que les icônes multisports au bas du logo rendent hommage aux étudiant-athlètes du Rouge et Or. Elles représentent leur engagement, leur discipline et leur rôle clé dans le rayonnement de la cause, bien au-delà de la performance sportive.',
+          },
         ],
       },
       pillars: {
