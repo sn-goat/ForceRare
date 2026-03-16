@@ -30,6 +30,10 @@ export class NavbarComponent {
   @HostListener('window:scroll')
   onScroll(): void {
     this.scrolled.set(window.scrollY > 50);
+
+    if (this.menuOpen() && window.innerWidth <= 1024) {
+      this.closeMenu();
+    }
   }
 
   toggleMenu(): void {

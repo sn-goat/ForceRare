@@ -309,7 +309,7 @@ export class ContentService {
           'Joueur de football avec les Carabins de l\'Université de Montréal, Valery occupe un rôle stratégique au sein de l\'équipe Force Rare. Grâce à son sens tactique, sa discipline sportive et sa rigueur, Valery contribue activement à l\'organisation, la planification et le développement du projet.',
       },
       {
-        name: 'Dylan',
+        name: 'Dylan Sea',
         role: 'Cofondateur — Création de contenu',
         shortBio:
           'Responsable de la création de contenu. Produit les vidéos, témoignages et contenu visuel.',

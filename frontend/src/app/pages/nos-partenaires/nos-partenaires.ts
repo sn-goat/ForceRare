@@ -5,6 +5,7 @@ import { PageHeroComponent } from '../../components/page-hero/page-hero';
 import { CtaBannerComponent } from '../../components/cta-banner/cta-banner';
 import { ContentService, NosPartenairesContent, PartnerInfo } from '../../services/content.service';
 import { ImageService } from '../../services/image.service';
+import { ImageAsset } from '../../models/image-asset';
 
 @Component({
   selector: 'app-nos-partenaires',
@@ -21,6 +22,7 @@ export class NosPartenairesComponent implements OnInit {
   readonly partners: PartnerInfo[] = this.content.getPartners();
 
   readonly heroImage = signal<string | null>(null);
+  readonly partnerImages = signal<ImageAsset[]>([]);
 
   ngOnInit(): void {
     this.imageService.getAll('general').subscribe({
@@ -35,5 +37,36 @@ export class NosPartenairesComponent implements OnInit {
         }
       },
     });
+
+    this.imageService.getAll('partner').subscribe({
+      next: (images: ImageAsset[]) => {
+        this.partnerImages.set(images);
+      },
+    });
+  }
+
+  getPartnerImage(partner: PartnerInfo): ImageAsset | undefined {
+    const titleMap: Record<string, string> = {
+      RQMO: 'logo rqmo',
+      'Fonds Mille-Pattes': 'logo fdmp',
+      CHUL: 'logo chul',
+    };
+
+    const expected = titleMap[partner.name];
+    if (!expected) {
+      return undefined;
+    }
+
+    return this.partnerImages().find(
+      (img) => this.normalizeText(img.title) === expected,
+    );
+  }
+
+  private normalizeText(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
   }
 }

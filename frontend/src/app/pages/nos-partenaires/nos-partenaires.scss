@@ -1,3 +1,29 @@
+.partner-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.75rem;
+  align-items: start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.partner-image-link {
+  margin: 0;
+  display: block;
+}
+
+.partner-image {
+  width: 280px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
 .partner-list {
   margin: 1.5rem 0;
   display: flex;
