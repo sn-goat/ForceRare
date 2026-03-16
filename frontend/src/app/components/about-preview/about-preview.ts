@@ -21,7 +21,7 @@ export class AboutPreviewComponent implements OnInit {
   readonly aboutImage = signal<ImageAsset | null>(null);
 
   ngOnInit(): void {
-    this.imageService.getAll('about').subscribe({
+    this.imageService.getAll('general').subscribe({
       next: (images: ImageAsset[]) => {
         if (images.length > 0) {
           this.aboutImage.set(images[0]);

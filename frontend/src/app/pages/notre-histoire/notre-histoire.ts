@@ -33,8 +33,7 @@ export class NotreHistoireComponent implements OnInit {
         const sorted = [...images].sort((a, b) => a.display_order - b.display_order);
         const field = sorted.find(
           (img) =>
-            img.title.toLowerCase().includes('football') ||
-            img.title.toLowerCase().includes('terrain'),
+            img.title.toLowerCase().includes('football field')
         );
         if (field) {
           this.heroImage.set(field.url);

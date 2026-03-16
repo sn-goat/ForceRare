@@ -46,8 +46,7 @@ export class NousJoindreComponent implements OnInit {
       next: (images) => {
         const bg = images.find(
           (img) =>
-            img.title.toLowerCase().includes('football') ||
-            img.title.toLowerCase().includes('terrain'),
+            img.title.toLowerCase().includes('football player')
         );
         if (bg) {
           this.heroImage.set(bg.url);

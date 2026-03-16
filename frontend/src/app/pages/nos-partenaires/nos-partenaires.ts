@@ -25,12 +25,11 @@ export class NosPartenairesComponent implements OnInit {
   readonly partnerImages = signal<ImageAsset[]>([]);
 
   ngOnInit(): void {
-    this.imageService.getAll('general').subscribe({
+    this.imageService.getAll('hero').subscribe({
       next: (images) => {
         const bg = images.find(
           (img) =>
-            img.title.toLowerCase().includes('team') ||
-            img.title.toLowerCase().includes('équipe'),
+            img.title.toLowerCase().includes('wide')
         );
         if (bg) {
           this.heroImage.set(bg.url);
