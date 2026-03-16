@@ -25,8 +25,7 @@ export class FaireUnDonComponent implements OnInit {
       next: (images) => {
         const bg = images.find(
           (img) =>
-            img.title.toLowerCase().includes('team') ||
-            img.title.toLowerCase().includes('équipe'),
+            img.title.toLowerCase().includes('football field')
         );
         if (bg) {
           this.heroImage.set(bg.url);

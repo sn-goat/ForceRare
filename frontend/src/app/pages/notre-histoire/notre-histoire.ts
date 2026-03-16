@@ -40,8 +40,7 @@ export class NotreHistoireComponent implements OnInit {
         }
         const team = sorted.find(
           (img) =>
-            img.title.toLowerCase().includes('team') ||
-            img.title.toLowerCase().includes('équipe'),
+            img.title.toLowerCase().includes('doctor')
         );
         if (team) {
           this.storyImage.set(team);
