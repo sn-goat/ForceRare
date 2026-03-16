@@ -42,11 +42,11 @@ export class NousJoindreComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.imageService.getAll('general').subscribe({
+    this.imageService.getAll('hero').subscribe({
       next: (images) => {
         const bg = images.find(
           (img) =>
-            img.title.toLowerCase().includes('football player')
+            img.title.toLowerCase().includes('wide')
         );
         if (bg) {
           this.heroImage.set(bg.url);
