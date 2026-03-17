@@ -29,7 +29,19 @@ export class NotreMissionComponent implements OnInit {
       next: (images: ImageAsset[]) => {
         if (images.length > 0) {
           this.missionImage.set(images[0]);
-          this.heroImage.set(images[0].url);
+        }
+      },
+    });
+
+    this.imageService.getAll('general').subscribe({
+      next: (images: ImageAsset[]) => {
+        const sorted = [...images].sort((a, b) => a.display_order - b.display_order);
+        const field = sorted.find(
+          (img) =>
+            img.title.toLowerCase().includes('football field')
+        );
+        if (field) {
+          this.heroImage.set(field.url);
         }
       },
     });

@@ -1,4 +1,4 @@
-<nav class="navbar" [class.navbar--scrolled]="scrolled()" role="navigation">
+<nav class="navbar" [class.navbar--scrolled]="scrolled()" [class.navbar--menu-open]="menuOpen()" role="navigation">
   <div class="navbar__inner">
     <a class="navbar__logo" routerLink="/" (click)="closeMenu()">
       <span class="navbar__logo-text">FORCE RARE</span>
@@ -6,18 +6,42 @@
 
     <ul class="navbar__links">
       @for (link of links; track link.label) {
-        <li>
-          <a
-            class="navbar__link"
-            [routerLink]="link.route"
-            [fragment]="link.fragment"
-            routerLinkActive="navbar__link--active"
-            [routerLinkActiveOptions]="{ exact: link.route === '/' && !link.fragment }"
-            (click)="closeMenu()"
-          >
-            {{ link.label }}
-          </a>
-        </li>
+        @if (link.children?.length) {
+          <li class="navbar__item navbar__item--group">
+            <span class="navbar__link" [class.navbar__link--active]="isAboutActive()">
+              {{ link.label }}
+            </span>
+            <ul class="navbar__submenu">
+              @for (child of link.children; track child.label) {
+                <li>
+                  <a
+                    class="navbar__submenu-link"
+                    [routerLink]="child.route"
+                    [fragment]="child.fragment"
+                    routerLinkActive="navbar__submenu-link--active"
+                    [routerLinkActiveOptions]="{ exact: true }"
+                    (click)="closeMenu()"
+                  >
+                    {{ child.label }}
+                  </a>
+                </li>
+              }
+            </ul>
+          </li>
+        } @else {
+          <li>
+            <a
+              class="navbar__link"
+              [routerLink]="link.route"
+              [fragment]="link.fragment"
+              routerLinkActive="navbar__link--active"
+              [routerLinkActiveOptions]="{ exact: link.route === '/' && !link.fragment }"
+              (click)="closeMenu()"
+            >
+              {{ link.label }}
+            </a>
+          </li>
+        }
       }
     </ul>
 
@@ -42,16 +66,45 @@
     <div class="navbar__mobile" role="dialog" aria-label="Menu de navigation">
       <ul class="navbar__mobile-links">
         @for (link of links; track link.label) {
-          <li>
-            <a
-              class="navbar__mobile-link"
-              [routerLink]="link.route"
-              [fragment]="link.fragment"
-              (click)="closeMenu()"
-            >
-              {{ link.label }}
-            </a>
-          </li>
+          @if (link.children?.length) {
+            <li class="navbar__mobile-group">
+              <button
+                class="navbar__mobile-link navbar__mobile-link--button"
+                type="button"
+                (click)="toggleMobileAbout()"
+                [attr.aria-expanded]="mobileAboutOpen()"
+              >
+                {{ link.label }}
+              </button>
+              @if (mobileAboutOpen()) {
+                <ul class="navbar__mobile-submenu">
+                  @for (child of link.children; track child.label) {
+                    <li>
+                      <a
+                        class="navbar__mobile-sublink"
+                        [routerLink]="child.route"
+                        [fragment]="child.fragment"
+                        (click)="closeMenu()"
+                      >
+                        {{ child.label }}
+                      </a>
+                    </li>
+                  }
+                </ul>
+              }
+            </li>
+          } @else {
+            <li>
+              <a
+                class="navbar__mobile-link"
+                [routerLink]="link.route"
+                [fragment]="link.fragment"
+                (click)="closeMenu()"
+              >
+                {{ link.label }}
+              </a>
+            </li>
+          }
         }
         <li>
           <a class="btn-primary navbar__mobile-cta" routerLink="/faire-un-don" (click)="closeMenu()">

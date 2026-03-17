@@ -85,6 +85,9 @@
 }
 
 .footer__social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-family: var(--font-heading);
   font-size: 0.9rem;
   font-weight: 600;
@@ -94,6 +97,17 @@
   &:hover {
     color: var(--color-accent);
   }
+}
+
+.footer__social-icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
 }
 
 .footer__bottom {

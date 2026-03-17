@@ -32,8 +32,7 @@ export class NotreEquipeComponent implements OnInit {
       next: (images: ImageAsset[]) => {
         const team = images.find(
           (img) =>
-            img.title.toLowerCase().includes('team') ||
-            img.title.toLowerCase().includes('équipe'),
+            img.title.toLowerCase().includes('football field')
         );
         if (team) {
           this.teamImage.set(team);
