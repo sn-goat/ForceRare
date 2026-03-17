@@ -1,0 +1,99 @@
+<app-page-hero
+  title="Événements"
+  subtitle="Retrouvez tous nos événements à venir et passés."
+/>
+
+<!-- Bande horizontale -->
+<section class="section content-section">
+  <div class="section__inner content-narrow">
+    <div class="accent-bar"></div>
+    <h2 class="content-heading">Prochains événements</h2>
+
+    @if (upcomingEvents().length === 0) {
+      <p class="content-body">Aucun événement à venir pour le moment.</p>
+    } @else {
+      <div class="strip-wrapper">
+        <div class="strip" #stripRef>
+          @for (event of upcomingEvents(); track event.id) {
+            <div class="strip-card" (click)="openPopup(event)">
+              <div class="strip-card__date">
+                <span class="strip-card__day">{{ event.date | date:'d' }}</span>
+                <span class="strip-card__month">{{ event.date | date:'MMM' : '' : 'fr-CA' }}</span>
+              </div>
+              <div class="strip-card__info">
+                <p class="strip-card__title">{{ event.title }}</p>
+                <p class="strip-card__time">{{ event.date | date:'HH:mm' }}</p>
+              </div>
+            </div>
+          }
+        </div>
+        <button class="strip-arrow" (click)="scrollStrip()" aria-label="Voir plus">&#8250;</button>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Calendrier grille -->
+<section class="section content-section content-section--alt">
+  <div class="section__inner content-narrow">
+    <h2 class="content-heading">Calendrier</h2>
+
+    <div class="calendar">
+      <div class="calendar__nav">
+        <button class="calendar__nav-btn" (click)="prevMonth()">&#8592;</button>
+        <span class="calendar__month-label">{{ monthLabel() }}</span>
+        <button class="calendar__nav-btn" (click)="nextMonth()">&#8594;</button>
+      </div>
+      <div class="calendar__grid">
+        @for (day of ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']; track day) {
+          <div class="calendar__day-header">{{ day }}</div>
+        }
+        @for (day of calendarDays(); track $index) {
+          <div
+            class="calendar__cell"
+            [class.calendar__cell--empty]="!day"
+            [class.calendar__cell--has-event]="day && getEventsForDay(day).length > 0"
+            (click)="day && getEventsForDay(day).length > 0 && openPopup(getEventsForDay(day)[0])"
+          >
+            @if (day) {
+              <span class="calendar__day-number">{{ day }}</span>
+              @if (getEventsForDay(day).length > 0) {
+                <span class="calendar__event-name">{{ getEventsForDay(day)[0].title }}</span>
+              }
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Popup -->
+@if (popupEvent()) {
+  <div class="popup-overlay" (click)="closePopup()">
+    <div class="popup" (click)="$event.stopPropagation()">
+      <button class="popup__close" (click)="closePopup()">&#x2715;</button>
+      <h2 class="popup__title">{{ popupEvent()!.title }}</h2>
+      <p class="popup__meta">
+        {{ popupEvent()!.date | date:'EEEE d MMMM yyyy' : '' : 'fr-CA' }}
+        &nbsp;·&nbsp;
+        {{ popupEvent()!.date | date:'HH:mm' }}
+      </p>
+      @if (popupEvent()!.location) {
+        <p class="popup__location">📍 {{ popupEvent()!.location }}</p>
+      }
+      @if (popupEvent()!.description) {
+        <p class="popup__desc">{{ popupEvent()!.description }}</p>
+      }
+      @if (popupEvent()!.images.length > 0) {
+        <div class="popup__images">
+          @for (img of popupEvent()!.images; track img.id) {
+            <img class="popup__img" [src]="img.url" [alt]="img.alt_text" />
+          }
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<app-cta-banner />

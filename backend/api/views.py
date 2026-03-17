@@ -1,6 +1,9 @@
 import json
 import re
 import logging
+from datetime import timedelta
+from .models import ImageAsset, Event
+from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.core.mail import send_mail
@@ -160,3 +163,38 @@ def contact(request):
         )
 
     return JsonResponse({'detail': 'Message envoyé avec succès.'}, status=200)
+
+
+def _serialize_event(event, request):
+    return {
+        'id': event.pk,
+        'title': event.title,
+        'description': event.description,
+        'date': event.date.isoformat(),
+        'location': event.location,
+        'images': [
+            {
+                'id': img.pk,
+                'url': request.build_absolute_uri(img.file.url),
+                'alt_text': img.alt_text,
+                'display_order': img.display_order,
+            }
+            for img in event.images.all()
+        ],
+    }
+
+
+
+@require_GET
+def event_list(request):
+    cutoff = timezone.now() - timedelta(hours=24)
+    events = Event.objects.filter(is_published=True, date__gte=cutoff)
+    return JsonResponse([_serialize_event(e, request) for e in events], safe=False)
+
+@require_GET
+def event_detail(request, event_id: int):
+    cutoff = timezone.now() - timedelta(hours=24)
+    event = Event.objects.filter(pk=event_id, is_published=True, date__gte=cutoff).first()
+    if event is None:
+        return JsonResponse({'detail': 'Not found.'}, status=404)
+    return JsonResponse(_serialize_event(event, request))

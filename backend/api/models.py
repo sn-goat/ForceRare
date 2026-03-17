@@ -60,3 +60,33 @@ class VideoAsset(models.Model):
 
 	def __str__(self):
 		return self.title or f"Video {self.pk}"
+
+
+class Event(models.Model):
+
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    date = models.DateTimeField()
+    location = models.CharField(max_length=255, blank=True)
+    is_published = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['date']
+
+    def __str__(self):
+        return self.title
+
+
+class EventImage(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
+    file = models.ImageField(upload_to='uploads/events/')
+    alt_text = models.CharField(max_length=255, blank=True)
+    display_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['display_order']
+
+    def __str__(self):
+        return f"Image {self.pk} — {self.event.title}"

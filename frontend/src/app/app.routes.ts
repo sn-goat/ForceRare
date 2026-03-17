@@ -8,6 +8,7 @@ import { NosPartenairesComponent } from './pages/nos-partenaires/nos-partenaires
 import { CollaborerComponent } from './pages/collaborer/collaborer';
 import { NousJoindreComponent } from './pages/nous-joindre/nous-joindre';
 import { FaireUnDonComponent } from './pages/faire-un-don/faire-un-don';
+import { EvenementsComponent} from './pages/evenements/evenements';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -18,5 +19,6 @@ export const routes: Routes = [
   { path: 'collaborer', component: CollaborerComponent },
   { path: 'nous-joindre', component: NousJoindreComponent },
   { path: 'faire-un-don', component: FaireUnDonComponent },
+  {path: 'evenements', component: EvenementsComponent},
   { path: '**', redirectTo: '' },
 ];

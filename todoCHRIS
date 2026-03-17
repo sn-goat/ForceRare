@@ -1,0 +1,23 @@
+High level:
+
+- Ajouter une section Événements entre À Propos et Partenaire dans le nav bar.
+- La section Événements doit paraître dans le footer.
+
+Dans la sections Événement il y a un calendrier et une section avec tous les événements passé et à venir.
+Chaque événement est lié à une case du calendrier, donc si tu click sur une case de calendrier avec un événement du devrais voir l'événement apparaître avec les images et vis-verça.
+
+Low Level:
+
+Un component calendrier (contruit et affiche le callendrier, angular à probablement qqch de built in pour ça à investiguer).
+
+Une page Événement (affiche les événement et le calendrier).
+
+Un model événements (la structure de donner qui contient représente les événements (textes, images (image.service?, dates et autre).
+
+Un service événements qui fait la gestion des événement (crée les objets événements et autre)
+
+événement birra basta 27 septembre 
+
+Événement phare force rare 7 septembre
+
+Famille à chaque game home (pour la date met la date de la première game home de laval)

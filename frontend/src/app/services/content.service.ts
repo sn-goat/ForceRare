@@ -264,6 +264,7 @@ export class ContentService {
       { label: 'Notre histoire', route: '/notre-histoire' },
       { label: 'Notre mission', route: '/notre-mission' },
       { label: 'Notre équipe', route: '/notre-equipe' },
+      { label: 'Événements', route: '/evenements'},
       { label: 'Partenaires', route: '/nos-partenaires' },
       { label: 'Collaborer', route: '/collaborer' },
       { label: 'Nous joindre', route: '/nous-joindre' },
