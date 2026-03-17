@@ -175,7 +175,7 @@ def _serialize_event(event, request):
         'images': [
             {
                 'id': img.pk,
-                'url': request.build_absolute_uri(img.file.url),
+                'url': img.file.url,
                 'alt_text': img.alt_text,
                 'display_order': img.display_order,
             }
