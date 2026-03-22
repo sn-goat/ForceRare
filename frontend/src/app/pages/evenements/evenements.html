@@ -1,6 +1,6 @@
 <app-page-hero
   title="Événements"
-  subtitle="Retrouvez tous nos événements à venir et passés."
+  subtitle="Retrouvez tous nos événements passés et à venir!"
 />
 
 <!-- Bande horizontale -->
@@ -87,8 +87,13 @@
       }
       @if (popupEvent()!.images.length > 0) {
         <div class="popup__images">
-          @for (img of popupEvent()!.images; track img.id) {
-            <img class="popup__img" [src]="img.url" [alt]="img.alt_text" />
+          @for (img of popupEvent()!.images; track img.id; let i = $index) {
+            <img
+            class= "popup__img"
+            [src]= "img.url"
+            [alt]= "img.alt_text"
+            (click)="openLightbox(popupEvent()!.images, i)"
+            />
           }
         </div>
       }
@@ -97,3 +102,20 @@
 }
 
 <app-cta-banner />
+@if (lightboxImages().length > 0) {
+  <div class="lightbox-overlay" (click)="closeLightbox()">
+    <div class="lightbox" (click)="$event.stopPropagation()">
+      <button class="lightbox__close" (click)="closeLightbox()">&#x2715;</button>
+      <button class="lightbox__prev" (click)="lightboxPrev()">&#8249;</button>
+      <img
+        class="lightbox__img"
+        [src]="lightboxImages()[lightboxIndex()].url"
+        [alt]="lightboxImages()[lightboxIndex()].alt_text"
+      />
+      <button class="lightbox__next" (click)="lightboxNext()">&#8250;</button>
+      <div class="lightbox__counter">
+        {{ lightboxIndex() + 1 }} / {{ lightboxImages().length }}
+      </div>
+    </div>
+  </div>
+}

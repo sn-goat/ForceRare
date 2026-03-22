@@ -1,7 +1,7 @@
 High level:
 
-- Ajouter une section Événements entre À Propos et Partenaire dans le nav bar.
-- La section Événements doit paraître dans le footer.
+- Ajouter une section Événements entre À Propos et Partenaire dans le nav bar. DONE
+- La section Événements doit paraître dans le footer. DONEk
 
 Dans la sections Événement il y a un calendrier et une section avec tous les événements passé et à venir.
 Chaque événement est lié à une case du calendrier, donc si tu click sur une case de calendrier avec un événement du devrais voir l'événement apparaître avec les images et vis-verça.

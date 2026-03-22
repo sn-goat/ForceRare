@@ -127,7 +127,9 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+
+# Chris modified this value to false to be able to display the right hours for the events
+USE_TZ = False 
 
 
 STATIC_URL = 'static/'

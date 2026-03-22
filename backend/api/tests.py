@@ -9,7 +9,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import SimpleTestCase, TestCase, override_settings
 
 from .admin import ImageAssetAdmin, VideoAssetAdmin
-from .models import ImageAsset, VideoAsset
+from .models import ImageAsset, VideoAsset, Event
 
 TEMP_MEDIA = tempfile.mkdtemp()
 
@@ -615,3 +615,271 @@ class ContactAPITest(SimpleTestCase):
         body = resp.json()
         self.assertNotIn("Traceback", str(body))
         self.assertNotIn("Exception", str(body))
+    # ── Event Model Tests ──────────────────────────────────────────────────────────
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA)
+class EventModelTest(TestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(TEMP_MEDIA, ignore_errors=True)
+        super().tearDownClass()
+
+    def _create(self, **kwargs):
+        defaults = {
+            "title": "Test Event",
+            "date": "2099-09-07 20:00:00",
+            "is_published": True,
+        }
+        defaults.update(kwargs)
+        return Event.objects.create(**defaults)
+
+    # Vérifie que __str__ retourne le titre de l'événement
+    def test_str_returns_title(self):
+        event = self._create(title="Birra Basta")
+        self.assertEqual(str(event), "Birra Basta")
+
+    # Vérifie que is_published est False par défaut
+    def test_default_is_published_false(self):
+        event = Event.objects.create(title="Test", date="2099-01-01 10:00:00")
+        self.assertFalse(event.is_published)
+
+    # Vérifie que les événements sont triés par date
+    def test_ordering_by_date(self):
+        self._create(title="Later", date="2099-10-01 10:00:00")
+        self._create(title="Earlier", date="2099-09-01 10:00:00")
+        ordered = list(Event.objects.values_list("title", flat=True))
+        self.assertEqual(ordered[0], "Earlier")
+        self.assertEqual(ordered[1], "Later")
+
+    # Vérifie que created_at est automatiquement défini
+    def test_created_at_auto_set(self):
+        event = self._create()
+        self.assertIsNotNone(event.created_at)
+
+
+# ── EventImage Model Tests ─────────────────────────────────────────────────────
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA)
+class EventImageModelTest(TestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(TEMP_MEDIA, ignore_errors=True)
+        super().tearDownClass()
+
+    def _create_event(self, **kwargs):
+        defaults = {"title": "Test Event", "date": "2099-09-07 20:00:00", "is_published": True}
+        defaults.update(kwargs)
+        return Event.objects.create(**defaults)
+
+    def _create_image(self, event, **kwargs):
+        from api.models import EventImage
+        defaults = {"file": _create_test_image(), "display_order": 0}
+        defaults.update(kwargs)
+        return EventImage.objects.create(event=event, **defaults)
+
+    # Vérifie que __str__ retourne le titre de l'événement lié
+    def test_str_returns_event_title(self):
+        event = self._create_event(title="Phare Force Rare")
+        img = self._create_image(event)
+        self.assertIn("Phare Force Rare", str(img))
+
+    # Vérifie que display_order est 0 par défaut
+    def test_default_display_order_zero(self):
+        event = self._create_event()
+        img = self._create_image(event)
+        self.assertEqual(img.display_order, 0)
+
+    # Vérifie que le fichier est stocké dans uploads/events/
+    def test_image_stored_under_uploads_events(self):
+        event = self._create_event()
+        img = self._create_image(event)
+        self.assertTrue(img.file.name.startswith("uploads/events/"))
+
+    # Vérifie que les images sont supprimées en cascade avec l'événement
+    def test_cascade_delete_with_event(self):
+        from api.models import EventImage
+        event = self._create_event()
+        self._create_image(event)
+        event_id = event.pk
+        event.delete()
+        self.assertEqual(EventImage.objects.filter(event_id=event_id).count(), 0)
+
+
+# ── Event List API Tests ───────────────────────────────────────────────────────
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA)
+class EventListAPITest(TestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(TEMP_MEDIA, ignore_errors=True)
+        super().tearDownClass()
+
+    def _create(self, **kwargs):
+        defaults = {
+            "title": "Test Event",
+            "date": "2099-09-07 20:00:00",
+            "is_published": True,
+        }
+        defaults.update(kwargs)
+        return Event.objects.create(**defaults)
+
+    # Vérifie que l'endpoint retourne 200
+    def test_list_returns_200(self):
+        resp = self.client.get("/api/events/")
+        self.assertEqual(resp.status_code, 200)
+
+    # Vérifie que la réponse est en JSON
+    def test_list_returns_json(self):
+        resp = self.client.get("/api/events/")
+        self.assertEqual(resp["Content-Type"], "application/json")
+
+    # Vérifie que la liste est vide quand aucun événement n'existe
+    def test_list_empty_when_no_events(self):
+        resp = self.client.get("/api/events/")
+        self.assertEqual(resp.json(), [])
+
+    # Vérifie que seuls les événements publiés sont retournés
+    def test_list_returns_published_only(self):
+        self._create(title="Visible", is_published=True)
+        self._create(title="Hidden", is_published=False)
+        data = self.client.get("/api/events/").json()
+        titles = [e["title"] for e in data]
+        self.assertIn("Visible", titles)
+        self.assertNotIn("Hidden", titles)
+
+    # Vérifie que les champs attendus sont présents dans la réponse
+    def test_list_response_fields(self):
+        self._create()
+        data = self.client.get("/api/events/").json()
+        expected_keys = {"id", "title", "description", "date", "location", "images"}
+        self.assertEqual(set(data[0].keys()), expected_keys)
+
+    # Vérifie que les images sont bien imbriquées dans l'événement
+    def test_list_images_nested_correctly(self):
+        from api.models import EventImage
+        event = self._create()
+        EventImage.objects.create(event=event, file=_create_test_image(), display_order=0)
+        data = self.client.get("/api/events/").json()
+        self.assertIsInstance(data[0]["images"], list)
+        self.assertEqual(len(data[0]["images"]), 1)
+        img = data[0]["images"][0]
+        self.assertIn("id", img)
+        self.assertIn("url", img)
+        self.assertIn("alt_text", img)
+        self.assertIn("display_order", img)
+
+    # Vérifie que POST n'est pas autorisé
+    def test_post_not_allowed(self):
+        resp = self.client.post("/api/events/")
+        self.assertEqual(resp.status_code, 405)
+
+    # Vérifie que PUT n'est pas autorisé
+    def test_put_not_allowed(self):
+        resp = self.client.put("/api/events/")
+        self.assertEqual(resp.status_code, 405)
+
+    # Vérifie que DELETE n'est pas autorisé
+    def test_delete_not_allowed(self):
+        resp = self.client.delete("/api/events/")
+        self.assertEqual(resp.status_code, 405)
+
+
+# ── Event Detail API Tests ─────────────────────────────────────────────────────
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA)
+class EventDetailAPITest(TestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(TEMP_MEDIA, ignore_errors=True)
+        super().tearDownClass()
+
+    def _create(self, **kwargs):
+        defaults = {
+            "title": "Test Event",
+            "date": "2099-09-07 20:00:00",
+            "is_published": True,
+        }
+        defaults.update(kwargs)
+        return Event.objects.create(**defaults)
+
+    # Vérifie que l'endpoint retourne 200 pour un événement existant
+    def test_detail_returns_200(self):
+        event = self._create()
+        resp = self.client.get(f"/api/events/{event.pk}/")
+        self.assertEqual(resp.status_code, 200)
+
+    # Vérifie que l'événement retourné correspond au bon id
+    def test_detail_returns_correct_event(self):
+        event = self._create(title="Phare Force Rare")
+        data = self.client.get(f"/api/events/{event.pk}/").json()
+        self.assertEqual(data["title"], "Phare Force Rare")
+        self.assertEqual(data["id"], event.pk)
+
+    # Vérifie que les champs attendus sont présents
+    def test_detail_response_fields(self):
+        event = self._create()
+        data = self.client.get(f"/api/events/{event.pk}/").json()
+        expected_keys = {"id", "title", "description", "date", "location", "images"}
+        self.assertEqual(set(data.keys()), expected_keys)
+
+    # Vérifie que 404 est retourné pour un id inexistant
+    def test_detail_404_nonexistent(self):
+        resp = self.client.get("/api/events/99999/")
+        self.assertEqual(resp.status_code, 404)
+
+    # Vérifie que 404 est retourné pour un événement non publié
+    def test_detail_404_unpublished(self):
+        event = self._create(is_published=False)
+        resp = self.client.get(f"/api/events/{event.pk}/")
+        self.assertEqual(resp.status_code, 404)
+
+    # Vérifie que le body du 404 contient la clé detail
+    def test_detail_404_body_has_detail_key(self):
+        resp = self.client.get("/api/events/99999/")
+        self.assertIn("detail", resp.json())
+
+    # Vérifie que POST n'est pas autorisé
+    def test_post_not_allowed(self):
+        event = self._create()
+        resp = self.client.post(f"/api/events/{event.pk}/")
+        self.assertEqual(resp.status_code, 405)
+
+    # Vérifie que DELETE n'est pas autorisé
+    def test_delete_not_allowed(self):
+        event = self._create()
+        resp = self.client.delete(f"/api/events/{event.pk}/")
+        self.assertEqual(resp.status_code, 405)
+
+
+# ── EventAdmin Tests ───────────────────────────────────────────────────────────
+
+class EventAdminTest(SimpleTestCase):
+
+    def setUp(self):
+        from api.admin import EventAdmin
+        self.admin = EventAdmin(model=Event, admin_site=AdminSite())
+
+    # Vérifie que list_display contient les champs attendus
+    def test_registered_list_display(self):
+        self.assertIn("title", self.admin.list_display)
+        self.assertIn("date", self.admin.list_display)
+        self.assertIn("is_published", self.admin.list_display)
+
+    # Vérifie que search_fields contient les champs attendus
+    def test_registered_search_fields(self):
+        self.assertIn("title", self.admin.search_fields)
+        self.assertIn("description", self.admin.search_fields)
+
+    # Vérifie que list_filter contient les champs attendus
+    def test_registered_list_filter(self):
+        self.assertIn("is_published", self.admin.list_filter)
+        self.assertIn("date", self.admin.list_filter)
+
+# Vérifie que EventImageInline est bien enregistré dans les inlines
+def test_inline_registered(self):
+    from api.admin import EventImageInline
+    self.assertIn(EventImageInline, self.admin.inlines)
