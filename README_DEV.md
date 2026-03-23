@@ -50,6 +50,12 @@ docker compose exec backend python manage.py createsuperuser
 docker compose exec backend python manage.py changepassword <username>
 ```
 
+Debug backend:
+
+```bash
+docker compose exec backend python manage.py shell
+```
+
 ---
 
 ## Frontend workflow

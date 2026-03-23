@@ -187,8 +187,7 @@ def _serialize_event(event, request):
 
 @require_GET
 def event_list(request):
-    cutoff = timezone.now() - timedelta(hours=24)
-    events = Event.objects.filter(is_published=True, date__gte=cutoff)
+    events = Event.objects.filter(is_published=True).order_by('date')
     return JsonResponse([_serialize_event(e, request) for e in events], safe=False)
 
 @require_GET

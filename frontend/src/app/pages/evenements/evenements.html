@@ -7,27 +7,73 @@
 <section class="section content-section">
   <div class="section__inner content-narrow">
     <div class="accent-bar"></div>
-    <h2 class="content-heading">Prochains événements</h2>
+    <h2 class="content-heading">Événements</h2>
 
-    @if (upcomingEvents().length === 0) {
-      <p class="content-body">Aucun événement à venir pour le moment.</p>
+    @if (allEvents().length === 0) {
+      <p class="content-body">Aucun événement pour le moment.</p>
     } @else {
-      <div class="strip-wrapper">
-        <div class="strip" #stripRef>
-          @for (event of upcomingEvents(); track event.id) {
-            <div class="strip-card" (click)="openPopup(event)">
-              <div class="strip-card__date">
-                <span class="strip-card__day">{{ event.date | date:'d' }}</span>
-                <span class="strip-card__month">{{ event.date | date:'MMM' : '' : 'fr-CA' }}</span>
-              </div>
-              <div class="strip-card__info">
-                <p class="strip-card__title">{{ event.title }}</p>
-                <p class="strip-card__time">{{ event.date | date:'HH:mm' }}</p>
-              </div>
+      <div class="strip-group">
+        <h3 class="strip-group__title">À venir</h3>
+        @if (futureEvents().length === 0) {
+          <p class="content-body">Aucun événement à venir.</p>
+        } @else {
+          <div class="strip-wrapper">
+            <div class="strip" #futureStripRef>
+              @for (event of futureEvents(); track event.id) {
+                <div
+                  class="strip-card"
+                  role="button"
+                  tabindex="0"
+                  (click)="openPopup(event)"
+                  (keydown.enter)="openPopup(event)"
+                  (keydown.space)="$event.preventDefault(); openPopup(event)"
+                >
+                  <div class="strip-card__date">
+                    <span class="strip-card__day">{{ event.date | date:'d' }}</span>
+                    <span class="strip-card__month">{{ event.date | date:'MMM' : '' : 'fr-CA' }}</span>
+                  </div>
+                  <div class="strip-card__info">
+                    <p class="strip-card__title">{{ event.title }}</p>
+                    <p class="strip-card__time">{{ event.date | date:'HH:mm' }}</p>
+                  </div>
+                </div>
+              }
             </div>
-          }
-        </div>
-        <button class="strip-arrow" (click)="scrollStrip()" aria-label="Voir plus">&#8250;</button>
+            <button class="strip-arrow" (click)="scrollFutureStrip()" aria-label="Voir plus">&#8250;</button>
+          </div>
+        }
+      </div>
+
+      <div class="strip-group strip-group--past">
+        <h3 class="strip-group__title">Passés</h3>
+        @if (pastEvents().length === 0) {
+          <p class="content-body">Aucun événement passé.</p>
+        } @else {
+          <div class="strip-wrapper">
+            <div class="strip" #pastStripRef>
+              @for (event of pastEvents(); track event.id) {
+                <div
+                  class="strip-card"
+                  role="button"
+                  tabindex="0"
+                  (click)="openPopup(event)"
+                  (keydown.enter)="openPopup(event)"
+                  (keydown.space)="$event.preventDefault(); openPopup(event)"
+                >
+                  <div class="strip-card__date">
+                    <span class="strip-card__day">{{ event.date | date:'d' }}</span>
+                    <span class="strip-card__month">{{ event.date | date:'MMM' : '' : 'fr-CA' }}</span>
+                  </div>
+                  <div class="strip-card__info">
+                    <p class="strip-card__title">{{ event.title }}</p>
+                    <p class="strip-card__time">{{ event.date | date:'HH:mm' }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+            <button class="strip-arrow" (click)="scrollPastStrip()" aria-label="Voir plus">&#8250;</button>
+          </div>
+        }
       </div>
     }
   </div>
@@ -53,7 +99,13 @@
             class="calendar__cell"
             [class.calendar__cell--empty]="!day"
             [class.calendar__cell--has-event]="day && getEventsForDay(day).length > 0"
-            (click)="day && getEventsForDay(day).length > 0 && openPopup(getEventsForDay(day)[0])"
+            [class.calendar__cell--past]="day && isPastDay(day)"
+            [class.calendar__cell--future]="day && isFutureDay(day)"
+            role="button"
+            [attr.tabindex]="day && getEventsForDay(day).length > 0 ? 0 : -1"
+            (click)="day && getEventsForDay(day).length > 0 && openFirstEventForDay(day)"
+            (keydown.enter)="day && getEventsForDay(day).length > 0 && openFirstEventForDay(day)"
+            (keydown.space)="$event.preventDefault(); day && getEventsForDay(day).length > 0 && openFirstEventForDay(day)"
           >
             @if (day) {
               <span class="calendar__day-number">{{ day }}</span>
@@ -92,7 +144,11 @@
             class= "popup__img"
             [src]= "img.url"
             [alt]= "img.alt_text"
+            role="button"
+            tabindex="0"
             (click)="openLightbox(popupEvent()!.images, i)"
+            (keydown.enter)="openLightbox(popupEvent()!.images, i)"
+            (keydown.space)="$event.preventDefault(); openLightbox(popupEvent()!.images, i)"
             />
           }
         </div>

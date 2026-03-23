@@ -15,7 +15,8 @@ import { Event } from '../../models/event';
 export class EvenementsComponent implements OnInit {
   private readonly eventService = inject(EventService);
 
-  @ViewChild('stripRef') stripRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('futureStripRef') futureStripRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('pastStripRef') pastStripRef!: ElementRef<HTMLDivElement>;
 
   readonly events = signal<Event[]>([]);
   readonly popupEvent = signal<Event | null>(null);
@@ -23,11 +24,19 @@ export class EvenementsComponent implements OnInit {
   readonly lightboxIndex = signal<number>(0);
   readonly currentMonth = signal(new Date());
 
-  readonly upcomingEvents = computed(() => {
-    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    return this.events()
-      .filter(e => new Date(e.date) >= cutoff)
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  readonly allEvents = computed(() => {
+  return this.events()
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+});
+
+  readonly futureEvents = computed(() => {
+    const now = new Date().getTime();
+    return this.allEvents().filter((event) => new Date(event.date).getTime() >= now);
+  });
+
+  readonly pastEvents = computed(() => {
+    const now = new Date().getTime();
+    return this.allEvents().filter((event) => new Date(event.date).getTime() < now);
   });
 
   readonly calendarDays = computed(() => {
@@ -47,9 +56,15 @@ export class EvenementsComponent implements OnInit {
   );
 
   ngOnInit(): void {
+    console.log('ngOnInit called');
     this.eventService.getAll().subscribe({
-      next: (events) => this.events.set(events),
-    });
+      next: (events) => {
+      console.log('events received', events);
+      this.events.set(events);
+    },
+      error: (err) => console.error('error', err)
+    })
+    ;
   }
 
   getEventsForDay(day: number): Event[] {
@@ -64,6 +79,29 @@ export class EvenementsComponent implements OnInit {
 
   openPopup(event: Event): void {
     this.popupEvent.set(event);
+  }
+
+  openFirstEventForDay(day: number): void {
+    const events = this.getEventsForDay(day);
+    if (events.length > 0) {
+      this.openPopup(events[0]);
+    }
+  }
+
+  isPastDay(day: number): boolean {
+    const date = this.currentMonth();
+    const cellDate = new Date(date.getFullYear(), date.getMonth(), day);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return cellDate.getTime() < today.getTime();
+  }
+
+  isFutureDay(day: number): boolean {
+    const date = this.currentMonth();
+    const cellDate = new Date(date.getFullYear(), date.getMonth(), day);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return cellDate.getTime() > today.getTime();
   }
 
   closePopup(): void {
@@ -99,8 +137,12 @@ lightboxNext(): void {
     this.currentMonth.set(new Date(d.getFullYear(), d.getMonth() + 1, 1));
   }
 
-  scrollStrip(): void {
-    this.stripRef.nativeElement.scrollBy({ left: 280, behavior: 'smooth' });
+  scrollFutureStrip(): void {
+    this.futureStripRef.nativeElement.scrollBy({ left: 280, behavior: 'smooth' });
+  }
+
+  scrollPastStrip(): void {
+    this.pastStripRef.nativeElement.scrollBy({ left: 280, behavior: 'smooth' });
   }
 
 @HostListener('document:keydown.escape')

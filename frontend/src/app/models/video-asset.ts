@@ -1,4 +1,4 @@
-export type VideoCategory = 'hero' | 'campaign' | 'testimonial' | 'event' | 'general';
+export type VideoCategory = 'hero' | 'campaign' | 'testimonial' | 'general';
 
 export interface VideoAsset {
   id: number;

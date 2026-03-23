@@ -9,6 +9,7 @@ export class EventService {
   private readonly apiBase = '/api/events';
 
   getAll(): Observable<Event[]> {
+    console.log('getAll called');
     return this.http.get<Event[]>(`${this.apiBase}/`);
   }
 

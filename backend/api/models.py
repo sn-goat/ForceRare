@@ -6,7 +6,6 @@ IMAGE_CATEGORY_CHOICES = [
 	("founder", "Fondateur"),
 	("partner", "Partenaire"),
 	("about", "À propos"),
-	("event", "Événement"),
 	("general", "Général"),
 ]
 
@@ -14,7 +13,6 @@ VIDEO_CATEGORY_CHOICES = [
 	("hero", "Hero"),
 	("campaign", "Campagne"),
 	("testimonial", "Témoignage"),
-	("event", "Événement"),
 	("general", "Général"),
 ]
 

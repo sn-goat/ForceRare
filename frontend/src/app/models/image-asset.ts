@@ -1,4 +1,4 @@
-export type ImageCategory = 'hero' | 'founder' | 'partner' | 'about' | 'event' | 'general';
+export type ImageCategory = 'hero' | 'founder' | 'partner' | 'about' | 'general';
 
 export interface ImageAsset {
   id: number;
