@@ -122,8 +122,22 @@
 
 <!-- Popup -->
 @if (popupEvent()) {
-  <div class="popup-overlay" (click)="closePopup()">
-    <div class="popup" (click)="$event.stopPropagation()">
+  <div
+    class="popup-overlay"
+    role="button"
+    tabindex="0"
+    (click)="closePopup()"
+    (keydown.enter)="closePopup()"
+    (keydown.space)="$event.preventDefault(); closePopup()"
+  >
+    <div
+      class="popup"
+      role="dialog"
+      tabindex="0"
+      (click)="$event.stopPropagation()"
+      (keydown.enter)="$event.stopPropagation()"
+      (keydown.space)="$event.preventDefault(); $event.stopPropagation()"
+    >
       <button class="popup__close" (click)="closePopup()">&#x2715;</button>
       <h2 class="popup__title">{{ popupEvent()!.title }}</h2>
       <p class="popup__meta">
@@ -159,8 +173,22 @@
 
 <app-cta-banner />
 @if (lightboxImages().length > 0) {
-  <div class="lightbox-overlay" (click)="closeLightbox()">
-    <div class="lightbox" (click)="$event.stopPropagation()">
+  <div
+    class="lightbox-overlay"
+    role="button"
+    tabindex="0"
+    (click)="closeLightbox()"
+    (keydown.enter)="closeLightbox()"
+    (keydown.space)="$event.preventDefault(); closeLightbox()"
+  >
+    <div
+      class="lightbox"
+      role="dialog"
+      tabindex="0"
+      (click)="$event.stopPropagation()"
+      (keydown.enter)="$event.stopPropagation()"
+      (keydown.space)="$event.preventDefault(); $event.stopPropagation()"
+    >
       <button class="lightbox__close" (click)="closeLightbox()">&#x2715;</button>
       <button class="lightbox__prev" (click)="lightboxPrev()">&#8249;</button>
       <img
