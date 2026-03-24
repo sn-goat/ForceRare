@@ -30,13 +30,7 @@ export class NotreEquipeComponent implements OnInit {
     });
     this.imageService.getAll('general').subscribe({
       next: (images: ImageAsset[]) => {
-        const team = images.find(
-          (img) =>
-            img.title.toLowerCase().includes('football field')
-        );
-        if (team) {
-          this.teamImage.set(team);
-        }
+        this.teamImage.set(images[3]);
       },
     });
   }

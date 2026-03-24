@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PageHeroComponent } from '../../components/page-hero/page-hero';
 import { CtaBannerComponent } from '../../components/cta-banner/cta-banner';
 import { EventService } from '../../services/event.service';
+import { ImageService } from '../../services/image.service';
 import { Event } from '../../models/event';
 
 @Component({
@@ -14,6 +15,7 @@ import { Event } from '../../models/event';
 })
 export class EvenementsComponent implements OnInit {
   private readonly eventService = inject(EventService);
+  private readonly imageService = inject(ImageService);
 
   @ViewChild('futureStripRef') futureStripRef!: ElementRef<HTMLDivElement>;
   @ViewChild('pastStripRef') pastStripRef!: ElementRef<HTMLDivElement>;
@@ -23,6 +25,7 @@ export class EvenementsComponent implements OnInit {
   readonly lightboxImages = signal<{url: string, alt_text: string}[]>([]);
   readonly lightboxIndex = signal<number>(0);
   readonly currentMonth = signal(new Date());
+  readonly heroImage = signal<string | null>(null);
 
   readonly allEvents = computed(() => {
   return this.events()
@@ -56,15 +59,19 @@ export class EvenementsComponent implements OnInit {
   );
 
   ngOnInit(): void {
-    console.log('ngOnInit called');
     this.eventService.getAll().subscribe({
       next: (events) => {
-      console.log('events received', events);
       this.events.set(events);
     },
       error: (err) => console.error('error', err)
-    })
-    ;
+    });
+    this.imageService.getAll('general').subscribe({
+      next: (images) => {
+              if (images.length > 0) {
+                this.heroImage.set(images[2].url);
+              }
+            },
+    });
   }
 
   getEventsForDay(day: number): Event[] {

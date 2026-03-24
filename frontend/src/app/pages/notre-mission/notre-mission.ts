@@ -25,23 +25,11 @@ export class NotreMissionComponent implements OnInit {
   readonly missionImage = signal<ImageAsset | null>(null);
 
   ngOnInit(): void {
-    this.imageService.getAll('about').subscribe({
-      next: (images: ImageAsset[]) => {
-        if (images.length > 0) {
-          this.missionImage.set(images[0]);
-        }
-      },
-    });
-
     this.imageService.getAll('general').subscribe({
       next: (images: ImageAsset[]) => {
-        const sorted = [...images].sort((a, b) => a.display_order - b.display_order);
-        const field = sorted.find(
-          (img) =>
-            img.title.toLowerCase().includes('football field')
-        );
-        if (field) {
-          this.heroImage.set(field.url);
+        if (images.length > 0) {
+          this.missionImage.set(images[6]);
+          this.heroImage.set(images[3].url);
         }
       },
     });

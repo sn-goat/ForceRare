@@ -13,11 +13,6 @@ export interface AboutPreviewContent {
   cta: string;
 }
 
-export interface VideoShowcaseContent {
-  heading: string;
-  subtext: string;
-}
-
 export interface StatItem {
   value: number;
   label: string;
@@ -52,7 +47,6 @@ export interface PartnersPreviewContent {
 export interface HomeContent {
   hero: HeroContent;
   about: AboutPreviewContent;
-  videoShowcase: VideoShowcaseContent;
   stats: StatsContent;
   mission: MissionContent;
   cta: CtaContent;
@@ -393,10 +387,6 @@ export class ContentService {
         heading: 'Qu\'est-ce que Force Rare?',
         body: 'Force Rare est un mouvement porté par des athlètes universitaires qui mobilise la communauté sportive pour soutenir les enfants atteints de maladies rares au Québec. Nous croyons que le sport est plus qu\'une performance — c\'est une plateforme d\'influence, de leadership et de solidarité.',
         cta: 'En savoir plus',
-      },
-      videoShowcase: {
-        heading: 'Qu\'est-ce que le projet Force Rare?',
-        subtext: 'Une initiative pour mettre en avant les maladies rares',
       },
       stats: {
         heading: 'Notre impact',

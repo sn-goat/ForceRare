@@ -30,39 +30,29 @@ export class NotreHistoireComponent implements OnInit {
   ngOnInit(): void {
     this.imageService.getAll('general').subscribe({
       next: (images: ImageAsset[]) => {
-        const sorted = [...images].sort((a, b) => a.display_order - b.display_order);
-        const field = sorted.find(
-          (img) =>
-            img.title.toLowerCase().includes('football field')
-        );
+        const field = images[3];
         if (field) {
           this.heroImage.set(field.url);
         }
-        const team = sorted.find(
-          (img) =>
-            img.title.toLowerCase().includes('doctor')
-        );
+        const team = images[5]
         if (team) {
           this.storyImage.set(team);
         }
       },
     });
 
-    this.imageService.getAll('hero').subscribe({
-      next: (images: ImageAsset[]) => {
-        const logo = [...images].sort((a, b) => a.display_order - b.display_order)[0];
-        this.logoImage.set(logo);
-      },
+      this.imageService.getAll('hero').subscribe({
+      next: (images) => {
+              if (images.length > 0) {
+                this.logoImage.set(images[0]);
+              }
+            },
     });
 
     this.imageService.getAll('founder').subscribe({
       next: (images: ImageAsset[]) => {
-        const sorted = [...images].sort((a, b) => a.display_order - b.display_order);
-        const cloe = sorted.filter((img) => {
-          const normalized = this.normalizeText(img.title);
-          return normalized.includes('cloe st-gelais') || normalized.includes('cloe st gelais');
-        });
-        this.cloeImages.set(cloe.slice(0, 2));
+        const cloe0 = images[4]; const cloe1 = images[5];
+        this.cloeImages.set([cloe0,cloe1]);
       },
     });
   }

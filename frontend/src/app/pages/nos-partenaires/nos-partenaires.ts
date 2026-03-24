@@ -27,12 +27,8 @@ export class NosPartenairesComponent implements OnInit {
   ngOnInit(): void {
     this.imageService.getAll('hero').subscribe({
       next: (images) => {
-        const bg = images.find(
-          (img) =>
-            img.title.toLowerCase().includes('wide')
-        );
-        if (bg) {
-          this.heroImage.set(bg.url);
+        if (images.length > 0) {
+          this.heroImage.set(images[1].url);
         }
       },
     });

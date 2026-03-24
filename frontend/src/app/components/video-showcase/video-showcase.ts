@@ -2,8 +2,7 @@ import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 
 import { VideoService } from '../../services/video.service';
-import { VideoAsset } from '../../models/video-asset';
-import { ContentService, VideoShowcaseContent } from '../../services/content.service';
+import { VideoAsset, VideoCategory } from '../../models/video-asset';
 
 @Component({
   selector: 'app-video-showcase',
@@ -14,27 +13,23 @@ import { ContentService, VideoShowcaseContent } from '../../services/content.ser
 })
 export class VideoShowcaseComponent implements OnInit {
   private readonly videoService = inject(VideoService);
-  private readonly content = inject(ContentService);
 
   @Input() videoIndex = 0;
-  @Input() heading?: string;
-  @Input() subtext?: string;
-
-  readonly videoContent: VideoShowcaseContent = this.content.getHome().videoShowcase;
+  @Input() category?: VideoCategory;
 
   readonly video = signal<VideoAsset | null>(null);
   readonly playing = signal(false);
 
   get displayHeading(): string {
-    return this.heading ?? this.videoContent.heading;
+    return this.video()?.title ?? "";
   }
 
   get displaySubtext(): string {
-    return this.subtext ?? this.videoContent.subtext;
+    return this.video()?.description ?? "";
   }
 
   ngOnInit(): void {
-    this.videoService.getAll().subscribe({
+    this.videoService.getAll(this.category).subscribe({
       next: (videos: VideoAsset[]) => {
         if (videos.length > this.videoIndex) {
           this.video.set(videos[this.videoIndex]);
