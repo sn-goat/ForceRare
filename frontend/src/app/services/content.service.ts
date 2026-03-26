@@ -430,6 +430,7 @@ export class ContentService {
       socialLinks: [
         { label: 'Instagram', url: 'https://www.instagram.com/force.rare', icon: 'instagram' },
         { label: 'Facebook', url: 'https://www.facebook.com/profile.php?id=61577886373634', icon: 'facebook' },
+        { label: 'Youtube', url: 'http://www.youtube.com/@Force_rare', icon: 'youtube' },
       ],
     };
   }

@@ -39,6 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'api',
+    'axes',
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_static',
+    'two_factor',
+    'auditlog',
 ]
 
 MIDDLEWARE = [
@@ -48,16 +54,18 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
+    'auditlog.middleware.AuditlogMiddleware',
 ]
-
 ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'api' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -166,3 +174,40 @@ else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CONTACT_EMAIL = os.getenv('CONTACT_EMAIL', 'contact@forcerare.com')
+
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = 1
+AXES_LOCKOUT_TEMPLATE = 'lockout.html'
+AXES_LOCKOUT_PARAMETERS = ['username', 'ip_address'] 
+AXES_RESET_ON_SUCCESS = True 
+
+
+LOGIN_URL = 'two_factor:login'
+LOGIN_REDIRECT_URL = '/forcerare-control-panel/admin/'
+
+# TWO_FACTOR_FORCE_OTP_ADMIN = True to add later
+# TWO_FACTOR_PATCH_ADMIN = True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/auth.log',
+        },
+    },
+    'loggers': {
+        'django.security': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}

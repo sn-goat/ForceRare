@@ -1,0 +1,79 @@
+{% extends "two_factor/_base.html" %}
+{% load i18n %}
+{% block title %}Login — ForceRare Control Panel{% endblock %}
+{% block extra_css %}
+    label {
+        display: block;
+        font-size: 0.85rem;
+        color: #555;
+        margin-bottom: 0.4rem;
+        font-family: "Times New Roman", Times, serif;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="number"] {
+        width: 100%;
+        padding: 0.5rem 0.65rem;
+        background: white;
+        border: 1px solid #999;
+        color: #1a1a1a;
+        font-size: 0.95rem;
+        font-family: "Times New Roman", Times, serif;
+        margin-bottom: 1.2rem;
+        outline: none;
+    }
+
+    input:focus { border-color: #1a1a1a; }
+
+    button[type="submit"] {
+        width: 100%;
+        padding: 0.6rem;
+        background: #1a1a1a;
+        color: white;
+        border: 2px solid #1a1a1a;
+        font-size: 0.95rem;
+        font-family: "Times New Roman", Times, serif;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button[type="submit"]:hover { background: #333; border-color: #333; }
+
+    .errorlist {
+        list-style: none;
+        background: #fff5f5;
+        border: 1px solid #c0392b;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1.2rem;
+        font-size: 0.85rem;
+        color: #c0392b;
+        font-family: "Times New Roman", Times, serif;
+    }
+{% endblock %}
+{% block content %}
+<form method="post">
+{% csrf_token %}
+{% for step in wizard.steps.all %}{% endfor %}
+{% if wizard.form.errors %}
+<ul class="errorlist">
+{% for error in wizard.form.non_field_errors %}
+<li>{{ error }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+{{ wizard.management_form }}
+{% for field in wizard.form.visible_fields %}
+<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+{{ field }}
+{% if field.errors %}
+<ul class="errorlist">
+{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+</ul>
+{% endif %}
+{% endfor %}
+<button type="submit">
+{% if wizard.steps.current == 'auth' %}Sign In{% else %}Verify{% endif %}
+</button>
+</form>
+{% endblock %}

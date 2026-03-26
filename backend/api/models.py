@@ -1,4 +1,5 @@
 from django.db import models
+from auditlog.registry import auditlog
 
 
 IMAGE_CATEGORY_CHOICES = [
@@ -88,3 +89,8 @@ class EventImage(models.Model):
 
     def __str__(self):
         return f"Image {self.pk} — {self.event.title}"
+
+auditlog.register(ImageAsset)
+auditlog.register(VideoAsset)
+auditlog.register(Event)
+auditlog.register(EventImage)

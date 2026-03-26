@@ -879,7 +879,7 @@ class EventAdminTest(SimpleTestCase):
         self.assertIn("is_published", self.admin.list_filter)
         self.assertIn("date", self.admin.list_filter)
 
-# Vérifie que EventImageInline est bien enregistré dans les inlines
-def test_inline_registered(self):
-    from api.admin import EventImageInline
-    self.assertIn(EventImageInline, self.admin.inlines)
+    # Vérifie que EventImageInline est bien enregistré dans les inlines
+    def test_inline_registered(self):
+        from api.admin import EventImageInline
+        self.assertIn(EventImageInline, self.admin.inlines)
