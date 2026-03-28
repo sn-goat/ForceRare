@@ -1,134 +1,52 @@
-# ForceRare — Dev Runbook (Docker)
+# ForceRare — Dev Setup
 
-## Quick start
+## Quick Start
 
 ```bash
-cd /home/snfib/ForceRare
+git clone <repo-url> && cd ForceRare
+cp .env.example .env        # fill in your values
 docker compose up -d --build
 ```
 
-Use this when dependencies/Dockerfiles changed or after a long pause.
+## URLs (dev)
 
----
+| Service | URL |
+|---------|-----|
+| Frontend (via nginx) | `http://localhost:8080/` |
+| API | `http://localhost:8080/api/images/` |
+| Admin panel | `http://localhost:8080/forcerare-control-panel/admin/` |
 
-## URLs
-
-- Frontend (nginx): `http://localhost:8080/`
-- API list: `http://localhost:8080/api/images/`
-- Backend direct: `http://localhost:8000/`
-- Django admin (current setup): `http://localhost:8000/admin/`
-
-
----
-
-## Backend workflow
-
-Start backend only:
+## Common Commands
 
 ```bash
-docker compose up backend
-```
+# Start / stop
+docker compose up -d --build
+docker compose down
 
-Run backend lint/tests:
-
-```bash
+# Backend
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py createsuperuser
 docker compose exec backend flake8 core api
 docker compose exec backend pytest
-```
 
-Run migrations:
-
-```bash
-docker compose exec backend python manage.py makemigrations
-docker compose exec backend python manage.py migrate
-```
-
-Create/reset admin user:
-
-```bash
-docker compose exec backend python manage.py createsuperuser
-docker compose exec backend python manage.py changepassword <username>
-```
-
-Debug backend:
-
-```bash
-docker compose exec backend python manage.py shell
-```
-
----
-
-## Frontend workflow
-
-Start frontend only:
-
-```bash
-docker compose up frontend
-```
-
-Run frontend lint/tests:
-
-```bash
+# Frontend
 docker compose exec frontend npm run lint
 docker compose exec frontend npm run test
 ```
 
----
+## Admin Panel
 
-## Combined startup options
+The admin panel requires 2FA (TOTP). On first login you'll be prompted to set up an authenticator app.
 
-```bash
-docker compose up backend frontend
-docker compose up
-```
+1. Go to `/forcerare-control-panel/admin/`
+2. Log in with superuser credentials
+3. Scan QR code with your authenticator app
+4. Upload images/videos/events through the admin interface
 
----
+## Image Upload Flow
 
-## Shutdown order
-
-1. `Ctrl+C` (stop foreground process)
-2. Stop all containers:
-
-```bash
-docker compose down
-```
-
-3. Confirm nothing is still running:
-
-```bash
-docker compose ps
-```
-
----
-
-## Database check (MySQL)
-
-Confirm Django DB engine:
-
-```bash
-docker compose exec backend python manage.py shell -c "from django.conf import settings; print(settings.DATABASES['default']['ENGINE'])"
-```
-
-Count image rows:
-
-```bash
-docker compose exec db sh -lc 'mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "USE $MYSQL_DATABASE; SELECT COUNT(*) AS image_count FROM api_imageasset;"'
-```
-
-
-Get logs
-
-```bash
-docker-compose run backend python manage.py review_admin_logs
-```
-
----
-
-## Image flow (current)
-
-1. Login to Django admin
-2. Add `ImageAsset`
-3. Upload file
-4. Set `is_published=True`
-5. Save
-6. Verify via `GET /api/images/`
+1. Admin panel → Image Assets → Add
+2. Select category (`hero`, `founder`, `partner`, `about`, `general`)
+3. Set `display_order` (controls position on frontend)
+4. Check `is_published`
+5. Save → available at `GET /api/images/?category=<category>`

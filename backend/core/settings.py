@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'axes',
     'django_otp',
     'django_otp.plugins.otp_totp',
-    'django_otp.plugins.otp_static',
     'two_factor',
     'auditlog',
 ]
@@ -189,7 +188,7 @@ AXES_ENABLE_ACCESS_FAILURE_LOG = True
 
 
 LOGIN_URL = 'two_factor:login'
-LOGIN_REDIRECT_URL = '/forcerare-control-panel/admin/'
+LOGIN_REDIRECT_URL = '/'
 
 TWO_FACTOR_FORCE_OTP_ADMIN = True
 TWO_FACTOR_PATCH_ADMIN = True

@@ -1,76 +1,60 @@
-# API Architecture (v2)
+# API Architecture
 
-## Goal
-Public read-only media delivery (images + videos) for the Angular frontend.
-
-## Current scope
-- Public users can only **read** published images and videos.
-- Admin users manage assets in Django Admin.
-- No public create/update/delete endpoints yet.
+## Overview
+Public read-only API for the Angular frontend + Django Admin for content management.
 
 ## Models
 
 ### ImageAsset
 | Field | Type | Notes |
 |-------|------|-------|
-| `file` | ImageField | Upload to `uploads/images/` |
+| `file` | ImageField | Upload to `uploads/images/`, validated (extensions + 10MB max) |
 | `title` | CharField(255) | |
 | `alt_text` | CharField(255) | Accessibility text |
-| `category` | CharField(20) | `hero`, `founder`, `partner`, `about`, `event`, `general` (default) |
+| `category` | CharField(20) | `hero`, `founder`, `partner`, `about`, `general` |
 | `is_published` | BooleanField | Default `False` |
 | `display_order` | PositiveIntegerField | Default `0` |
-| `created_at` | DateTimeField | Auto |
-| `updated_at` | DateTimeField | Auto |
 
 ### VideoAsset
 | Field | Type | Notes |
 |-------|------|-------|
-| `file` | FileField | Upload to `uploads/videos/` |
+| `file` | FileField | Upload to `uploads/videos/`, validated (extensions + 500MB max) |
 | `title` | CharField(255) | |
-| `description` | TextField | Blank allowed |
-| `category` | CharField(20) | `hero`, `campaign`, `testimonial`, `event`, `general` (default) |
-| `thumbnail` | ImageField | Optional, upload to `uploads/videos/thumbnails/` |
+| `description` | TextField | |
+| `category` | CharField(20) | `hero`, `campaign`, `testimonial`, `general` |
+| `thumbnail` | ImageField | Optional |
 | `is_published` | BooleanField | Default `False` |
 | `display_order` | PositiveIntegerField | Default `0` |
-| `created_at` | DateTimeField | Auto |
-| `updated_at` | DateTimeField | Auto |
 
-Both models ordered by `[display_order, -created_at]`.
+### Event / EventImage
+| Field | Type | Notes |
+|-------|------|-------|
+| `title` | CharField(255) | |
+| `description` | TextField | |
+| `date` | DateTimeField | |
+| `location` | CharField(255) | |
+| `images` | EventImage (FK) | Multiple images per event, validated |
 
-## Layers
-1. **Storage layer**
-   - Django media storage (`MEDIA_ROOT`, `MEDIA_URL`).
-   - Nginx proxies `/media/` to backend for binary delivery.
-   - Local storage in dev; S3-compatible planned for prod.
+## API Endpoints
 
-2. **Catalog layer**
-   - `ImageAsset` + `VideoAsset` models store metadata and publication status.
-   - Category field enables frontend filtering by section (hero, founder, etc.).
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/images/` | GET | List published images (`?category=` filter) |
+| `/api/images/<id>/` | GET | Single published image |
+| `/api/videos/` | GET | List published videos (`?category=` filter) |
+| `/api/videos/<id>/` | GET | Single published video |
+| `/api/events/` | GET | List published events |
+| `/api/events/<id>/` | GET | Single published event |
+| `/api/contact/` | POST | Contact form submission (rate limited) |
 
-3. **Delivery layer (public API)**
-   - `GET /api/images/`        — list published images (`?category=` filter)
-   - `GET /api/images/<id>/`   — fetch one published image
-   - `GET /api/videos/`        — list published videos (`?category=` filter)
-   - `GET /api/videos/<id>/`   — fetch one published video
+## Security
+- File upload validation: allowed extensions + max file size
+- Input sanitization via `html.escape()`
+- Admin panel protected by 2FA (TOTP)
+- Login brute-force protection via `django-axes`
+- Rate limiting on contact endpoint (nginx: 5 req/min)
+- Audit logging via `django-auditlog`
 
-4. **Back-office layer**
-   - Django Admin for upload / edit / publish / ordering.
-   - Both models registered with search, filter, display customisation.
-
-## Test coverage
-- **69 tests** covering models, API views, and admin config.
-- Tests use SQLite `:memory:` (auto-detected via `pytest` in `sys.modules`).
-
-## Why this structure
-- Fast to ship now.
-- Clean upgrade path for later admin-only API actions.
-- Category system maps directly to frontend homepage sections.
-- Keeps frontend contract stable while backend grows.
-
-## Planned v3 additions
-- Auth endpoints under `/api/auth/...`.
-- Admin-only asset endpoints (create/update/delete).
-- Validation (max size, mime type, dimensions).
-- Optional cloud storage (S3-compatible).
-- Pagination on list endpoints.
-- Video transcoding / adaptive streaming.
+## Storage
+- **Dev**: local filesystem (`MEDIA_ROOT`)
+- **Production**: DigitalOcean Spaces via `django-storages` + `boto3` (S3-compatible)
