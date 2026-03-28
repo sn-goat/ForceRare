@@ -774,7 +774,7 @@ class EventListAPITest(TestCase):
         data = self.client.get("/api/events/").json()
         self.assertIsInstance(data[0]["images"], list)
         self.assertEqual(len(data[0]["images"]), 1)
-        img = data[0]["images"][0]Event 24h cutoff	Future event visible, 12h ago visible, 25h ago hidden, borderline case
+        img = data[0]["images"][0]
         self.assertIn("id", img)
         self.assertIn("url", img)
         self.assertIn("alt_text", img)
@@ -881,7 +881,7 @@ class EventAdminTest(SimpleTestCase):
     # Vérifie que search_fields contient les champs attendus
     def test_registered_search_fields(self):
         self.assertIn("title", self.admin.search_fields)
-        self.assertIn("description", self.admin.search_fields)Event 24h cutoff	Future event visible, 12h ago visible, 25h ago hidden, borderline case
+        self.assertIn("description", self.admin.search_fields)
 
     # Vérifie que list_filter contient les champs attendus
     def test_registered_list_filter(self):
@@ -1110,4 +1110,3 @@ class VideoListOrderingTest(TestCase):
         data = self.client.get("/api/videos/").json()
         self.assertEqual(data[0]["title"], "First")
         self.assertEqual(data[1]["title"], "Second")
-Event 24h cutoff	Future event visible, 12h ago visible, 25h ago hidden, borderline case
