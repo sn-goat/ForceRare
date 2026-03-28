@@ -35,8 +35,5 @@ yarn-error.log*
 *.sql
 *.dump
 
-# Claude
-.claude/
-
 # Logs
 log/
