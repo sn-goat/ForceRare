@@ -2,14 +2,23 @@ import io
 import json
 import shutil
 import tempfile
+from datetime import timedelta
+from unittest.mock import patch
 
 from PIL import Image
 from django.contrib.admin.sites import AdminSite
+from django.core import mail
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import SimpleTestCase, TestCase, override_settings
+from django.utils import timezone
 
 from .admin import ImageAssetAdmin, VideoAssetAdmin
-from .models import ImageAsset, VideoAsset, Event
+from .models import (
+    ImageAsset, VideoAsset, Event, EventImage,
+    validate_image_file_size, validate_video_file_size,
+    MAX_IMAGE_FILE_SIZE, MAX_VIDEO_FILE_SIZE,
+)
 
 TEMP_MEDIA = tempfile.mkdtemp()
 
@@ -765,7 +774,7 @@ class EventListAPITest(TestCase):
         data = self.client.get("/api/events/").json()
         self.assertIsInstance(data[0]["images"], list)
         self.assertEqual(len(data[0]["images"]), 1)
-        img = data[0]["images"][0]
+        img = data[0]["images"][0]Event 24h cutoff	Future event visible, 12h ago visible, 25h ago hidden, borderline case
         self.assertIn("id", img)
         self.assertIn("url", img)
         self.assertIn("alt_text", img)
@@ -872,7 +881,7 @@ class EventAdminTest(SimpleTestCase):
     # Vérifie que search_fields contient les champs attendus
     def test_registered_search_fields(self):
         self.assertIn("title", self.admin.search_fields)
-        self.assertIn("description", self.admin.search_fields)
+        self.assertIn("description", self.admin.search_fields)Event 24h cutoff	Future event visible, 12h ago visible, 25h ago hidden, borderline case
 
     # Vérifie que list_filter contient les champs attendus
     def test_registered_list_filter(self):
@@ -883,3 +892,222 @@ class EventAdminTest(SimpleTestCase):
     def test_inline_registered(self):
         from api.admin import EventImageInline
         self.assertIn(EventImageInline, self.admin.inlines)
+
+
+# ── File Validator Tests ──────────────────────────────────────────────────────
+
+class ImageFileSizeValidatorTest(SimpleTestCase):
+
+    def test_valid_size_passes(self):
+        file = SimpleUploadedFile("ok.png", b"\x00" * 100, content_type="image/png")
+        file.size = 100
+        validate_image_file_size(file)
+
+    def test_oversized_raises_validation_error(self):
+        file = SimpleUploadedFile("big.png", b"\x00", content_type="image/png")
+        file.size = MAX_IMAGE_FILE_SIZE + 1
+        with self.assertRaises(ValidationError):
+            validate_image_file_size(file)
+
+    def test_exact_limit_passes(self):
+        file = SimpleUploadedFile("exact.png", b"\x00", content_type="image/png")
+        file.size = MAX_IMAGE_FILE_SIZE
+        validate_image_file_size(file)
+
+
+class VideoFileSizeValidatorTest(SimpleTestCase):
+
+    def test_valid_size_passes(self):
+        file = SimpleUploadedFile("ok.mp4", b"\x00" * 100, content_type="video/mp4")
+        file.size = 100
+        validate_video_file_size(file)
+
+    def test_oversized_raises_validation_error(self):
+        file = SimpleUploadedFile("big.mp4", b"\x00", content_type="video/mp4")
+        file.size = MAX_VIDEO_FILE_SIZE + 1
+        with self.assertRaises(ValidationError):
+            validate_video_file_size(file)
+
+    def test_exact_limit_passes(self):
+        file = SimpleUploadedFile("exact.mp4", b"\x00", content_type="video/mp4")
+        file.size = MAX_VIDEO_FILE_SIZE
+        validate_video_file_size(file)
+
+
+# ── Event Detail Past Events Visible Tests ────────────────────────────────────
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA)
+class EventDetailPastEventsTest(TestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(TEMP_MEDIA, ignore_errors=True)
+        super().tearDownClass()
+
+    def test_future_event_returns_200(self):
+        event = Event.objects.create(
+            title="Future",
+            date=timezone.now() + timedelta(days=7),
+            is_published=True,
+        )
+        resp = self.client.get(f"/api/events/{event.pk}/")
+        self.assertEqual(resp.status_code, 200)
+
+    def test_past_event_returns_200(self):
+        event = Event.objects.create(
+            title="Past",
+            date=timezone.now() - timedelta(days=30),
+            is_published=True,
+        )
+        resp = self.client.get(f"/api/events/{event.pk}/")
+        self.assertEqual(resp.status_code, 200)
+
+    def test_old_event_still_visible(self):
+        event = Event.objects.create(
+            title="Old",
+            date=timezone.now() - timedelta(days=365),
+            is_published=True,
+        )
+        resp = self.client.get(f"/api/events/{event.pk}/")
+        self.assertEqual(resp.status_code, 200)
+
+
+# ── Contact Email Content & Failure Tests ─────────────────────────────────────
+
+@override_settings(
+    EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
+    CONTACT_EMAIL='test@forcerare.com',
+    DEFAULT_FROM_EMAIL='noreply@forcerare.com',
+)
+class ContactEmailContentTest(SimpleTestCase):
+
+    def _post(self, data):
+        return self.client.post(
+            "/api/contact/",
+            data=json.dumps(data),
+            content_type="application/json",
+        )
+
+    def test_email_subject_contains_selected_subject(self):
+        self._post({
+            "name": "Jean",
+            "email": "jean@test.com",
+            "subject": "Question générale",
+            "message": "Bonjour",
+        })
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("Question générale", mail.outbox[0].subject)
+
+    def test_email_subject_uses_custom_subject_for_autre(self):
+        self._post({
+            "name": "Jean",
+            "email": "jean@test.com",
+            "subject": "Autre",
+            "customSubject": "Mon sujet",
+            "message": "Bonjour",
+        })
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("Mon sujet", mail.outbox[0].subject)
+
+    def test_email_body_contains_sender_info(self):
+        self._post({
+            "name": "Jean Dupont",
+            "email": "jean@test.com",
+            "subject": "Question générale",
+            "message": "Mon message ici",
+        })
+        body = mail.outbox[0].body
+        self.assertIn("Jean Dupont", body)
+        self.assertIn("jean@test.com", body)
+        self.assertIn("Mon message ici", body)
+
+    def test_email_sent_to_contact_email(self):
+        self._post({
+            "name": "Jean",
+            "email": "jean@test.com",
+            "subject": "Question générale",
+            "message": "Hi",
+        })
+        self.assertEqual(mail.outbox[0].to, ["test@forcerare.com"])
+
+    def test_email_from_is_default_from_email(self):
+        self._post({
+            "name": "Jean",
+            "email": "jean@test.com",
+            "subject": "Question générale",
+            "message": "Hi",
+        })
+        self.assertEqual(mail.outbox[0].from_email, "noreply@forcerare.com")
+
+    @patch('api.views.send_mail', side_effect=Exception("SMTP down"))
+    def test_email_failure_returns_500(self, mock_send):
+        resp = self._post({
+            "name": "Jean",
+            "email": "jean@test.com",
+            "subject": "Question générale",
+            "message": "Hi",
+        })
+        self.assertEqual(resp.status_code, 500)
+        self.assertIn("detail", resp.json())
+
+    @patch('api.views.send_mail', side_effect=Exception("SMTP down"))
+    def test_email_failure_does_not_leak_exception_details(self, mock_send):
+        resp = self._post({
+            "name": "Jean",
+            "email": "jean@test.com",
+            "subject": "Question générale",
+            "message": "Hi",
+        })
+        body = resp.json()
+        self.assertNotIn("SMTP", str(body))
+        self.assertNotIn("Traceback", str(body))
+
+
+# ── Event List Ordering Tests ─────────────────────────────────────────────────
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA)
+class EventListOrderingTest(TestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(TEMP_MEDIA, ignore_errors=True)
+        super().tearDownClass()
+
+    def test_events_ordered_by_date(self):
+        Event.objects.create(title="Later", date=timezone.now() + timedelta(days=10), is_published=True)
+        Event.objects.create(title="Sooner", date=timezone.now() + timedelta(days=1), is_published=True)
+        data = self.client.get("/api/events/").json()
+        self.assertEqual(data[0]["title"], "Sooner")
+        self.assertEqual(data[1]["title"], "Later")
+
+    def test_event_images_ordered_by_display_order(self):
+        event = Event.objects.create(
+            title="Test",
+            date=timezone.now() + timedelta(days=1),
+            is_published=True,
+        )
+        EventImage.objects.create(event=event, file=_create_test_image(), display_order=2, alt_text="second")
+        EventImage.objects.create(event=event, file=_create_test_image(), display_order=1, alt_text="first")
+        data = self.client.get("/api/events/").json()
+        images = data[0]["images"]
+        self.assertEqual(images[0]["alt_text"], "first")
+        self.assertEqual(images[1]["alt_text"], "second")
+
+
+# ── Video List Ordering Tests ─────────────────────────────────────────────────
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA)
+class VideoListOrderingTest(TestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(TEMP_MEDIA, ignore_errors=True)
+        super().tearDownClass()
+
+    def test_videos_ordered_by_display_order(self):
+        VideoAsset.objects.create(file=_create_test_video(), title="Second", display_order=2, is_published=True)
+        VideoAsset.objects.create(file=_create_test_video(), title="First", display_order=1, is_published=True)
+        data = self.client.get("/api/videos/").json()
+        self.assertEqual(data[0]["title"], "First")
+        self.assertEqual(data[1]["title"], "Second")
+Event 24h cutoff	Future event visible, 12h ago visible, 25h ago hidden, borderline case

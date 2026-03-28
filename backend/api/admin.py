@@ -4,8 +4,6 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 from .models import ImageAsset, VideoAsset, Event, EventImage
 
 
-# Re-register TOTP admin without raw_id_fields
-# (raw_id_fields breaks when using a custom AdminSite instance)
 admin.site.unregister(TOTPDevice)
 
 

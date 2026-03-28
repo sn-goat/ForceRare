@@ -1,8 +1,6 @@
 import json
 import html
 import logging
-from datetime import timedelta
-from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.core.mail import send_mail
@@ -191,8 +189,7 @@ def event_list(request):
 
 @require_GET
 def event_detail(request, event_id: int):
-    cutoff = timezone.now() - timedelta(hours=24)
-    event = Event.objects.filter(pk=event_id, is_published=True, date__gte=cutoff).first()
+    event = Event.objects.filter(pk=event_id, is_published=True).first()
     if event is None:
         return JsonResponse({'detail': 'Not found.'}, status=404)
     return JsonResponse(_serialize_event(event, request))

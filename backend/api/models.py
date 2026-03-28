@@ -6,8 +6,8 @@ from auditlog.registry import auditlog
 ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp']
 ALLOWED_VIDEO_EXTENSIONS = ['mp4', 'mov', 'webm']
 
-MAX_IMAGE_FILE_SIZE = 10 * 1024 * 1024       # 10 MB
-MAX_VIDEO_FILE_SIZE = 500 * 1024 * 1024      # 500 MB
+MAX_IMAGE_FILE_SIZE = 10 * 1024 * 1024      
+MAX_VIDEO_FILE_SIZE = 500 * 1024 * 1024      
 
 
 def validate_image_file_size(value):
