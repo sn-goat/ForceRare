@@ -1,0 +1,15 @@
+<section class="stats" id="impact">
+  <div class="stats__inner">
+    <h2 class="stats__heading">{{ stats.heading }}</h2>
+    <p class="stats__subheading">{{ stats.subheading }}</p>
+
+    <div class="stats__grid">
+      @for (item of stats.items; track item.label; let i = $index) {
+        <div class="stats__item">
+          <span class="stats__value">{{ formatStat(i, item) }}</span>
+          <span class="stats__label">{{ item.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>

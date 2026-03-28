@@ -1,0 +1,206 @@
+<app-page-hero
+  title="Événements"
+  subtitle="Retrouvez tous nos événements passés et à venir!"
+  [backgroundImage]="heroImage()"
+/>
+
+<!-- Bande horizontale -->
+<section class="section content-section">
+  <div class="section__inner content-narrow">
+    <div class="accent-bar"></div>
+    <h2 class="content-heading">Événements</h2>
+
+    @if (allEvents().length === 0) {
+      <p class="content-body">Aucun événement pour le moment.</p>
+    } @else {
+      <div class="strip-group">
+        <h3 class="strip-group__title">À venir</h3>
+        @if (futureEvents().length === 0) {
+          <p class="content-body">Aucun événement à venir.</p>
+        } @else {
+          <div class="strip-wrapper">
+            <div class="strip" #futureStripRef>
+              @for (event of futureEvents(); track event.id) {
+                <div
+                  class="strip-card"
+                  role="button"
+                  tabindex="0"
+                  (click)="openPopup(event)"
+                  (keydown.enter)="openPopup(event)"
+                  (keydown.space)="$event.preventDefault(); openPopup(event)"
+                >
+                  <div class="strip-card__date">
+                    <span class="strip-card__day">{{ event.date | date:'d' }}</span>
+                    <span class="strip-card__month">{{ event.date | date:'MMM' : '' : 'fr-CA' }}</span>
+                  </div>
+                  <div class="strip-card__info">
+                    <p class="strip-card__title">{{ event.title }}</p>
+                    <p class="strip-card__time">{{ event.date | date:'HH:mm' }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+            <button class="strip-arrow" (click)="scrollFutureStrip()" aria-label="Voir plus">&#8250;</button>
+          </div>
+        }
+      </div>
+
+      <div class="strip-group strip-group--past">
+        <h3 class="strip-group__title">Passés</h3>
+        @if (pastEvents().length === 0) {
+          <p class="content-body">Aucun événement passé.</p>
+        } @else {
+          <div class="strip-wrapper">
+            <div class="strip" #pastStripRef>
+              @for (event of pastEvents(); track event.id) {
+                <div
+                  class="strip-card"
+                  role="button"
+                  tabindex="0"
+                  (click)="openPopup(event)"
+                  (keydown.enter)="openPopup(event)"
+                  (keydown.space)="$event.preventDefault(); openPopup(event)"
+                >
+                  <div class="strip-card__date">
+                    <span class="strip-card__day">{{ event.date | date:'d' }}</span>
+                    <span class="strip-card__month">{{ event.date | date:'MMM' : '' : 'fr-CA' }}</span>
+                  </div>
+                  <div class="strip-card__info">
+                    <p class="strip-card__title">{{ event.title }}</p>
+                    <p class="strip-card__time">{{ event.date | date:'HH:mm' }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+            <button class="strip-arrow" (click)="scrollPastStrip()" aria-label="Voir plus">&#8250;</button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Calendrier grille -->
+<section class="section content-section content-section--alt">
+  <div class="section__inner content-narrow">
+    <h2 class="content-heading">Calendrier</h2>
+
+    <div class="calendar">
+      <div class="calendar__nav">
+        <button class="calendar__nav-btn" (click)="prevMonth()">&#8592;</button>
+        <span class="calendar__month-label">{{ monthLabel() }}</span>
+        <button class="calendar__nav-btn" (click)="nextMonth()">&#8594;</button>
+      </div>
+      <div class="calendar__grid">
+        @for (day of ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']; track day) {
+          <div class="calendar__day-header">{{ day }}</div>
+        }
+        @for (day of calendarDays(); track $index) {
+          <div
+            class="calendar__cell"
+            [class.calendar__cell--empty]="!day"
+            [class.calendar__cell--has-event]="day && getEventsForDay(day).length > 0"
+            [class.calendar__cell--past]="day && isPastDay(day)"
+            [class.calendar__cell--future]="day && isFutureDay(day)"
+            role="button"
+            [attr.tabindex]="day && getEventsForDay(day).length > 0 ? 0 : -1"
+            (click)="day && getEventsForDay(day).length > 0 && openFirstEventForDay(day)"
+            (keydown.enter)="day && getEventsForDay(day).length > 0 && openFirstEventForDay(day)"
+            (keydown.space)="$event.preventDefault(); day && getEventsForDay(day).length > 0 && openFirstEventForDay(day)"
+          >
+            @if (day) {
+              <span class="calendar__day-number">{{ day }}</span>
+              @if (getEventsForDay(day).length > 0) {
+                <span class="calendar__event-name">{{ getEventsForDay(day)[0].title }}</span>
+              }
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Popup -->
+@if (popupEvent()) {
+  <div
+    class="popup-overlay"
+    role="button"
+    tabindex="0"
+    (click)="closePopup()"
+    (keydown.enter)="closePopup()"
+    (keydown.space)="$event.preventDefault(); closePopup()"
+  >
+    <div
+      class="popup"
+      role="dialog"
+      tabindex="0"
+      (click)="$event.stopPropagation()"
+      (keydown.enter)="$event.stopPropagation()"
+      (keydown.space)="$event.preventDefault(); $event.stopPropagation()"
+    >
+      <button class="popup__close" (click)="closePopup()">&#x2715;</button>
+      <h2 class="popup__title">{{ popupEvent()!.title }}</h2>
+      <p class="popup__meta">
+        {{ popupEvent()!.date | date:'EEEE d MMMM yyyy' : '' : 'fr-CA' }}
+        &nbsp;·&nbsp;
+        {{ popupEvent()!.date | date:'HH:mm' }}
+      </p>
+      @if (popupEvent()!.location) {
+        <p class="popup__location">📍 {{ popupEvent()!.location }}</p>
+      }
+      @if (popupEvent()!.description) {
+        <p class="popup__desc">{{ popupEvent()!.description }}</p>
+      }
+      @if (popupEvent()!.images.length > 0) {
+        <div class="popup__images">
+          @for (img of popupEvent()!.images; track img.id; let i = $index) {
+            <img
+            class="popup__img"
+            [src]="img.url"
+            [alt]="img.alt_text"
+            role="button"
+            tabindex="0"
+            (click)="openLightbox(popupEvent()!.images, i)"
+            (keydown.enter)="openLightbox(popupEvent()!.images, i)"
+            (keydown.space)="$event.preventDefault(); openLightbox(popupEvent()!.images, i)"
+            />
+          }
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<app-cta-banner />
+@if (lightboxImages().length > 0) {
+  <div
+    class="lightbox-overlay"
+    role="button"
+    tabindex="0"
+    (click)="closeLightbox()"
+    (keydown.enter)="closeLightbox()"
+    (keydown.space)="$event.preventDefault(); closeLightbox()"
+  >
+    <div
+      class="lightbox"
+      role="dialog"
+      tabindex="0"
+      (click)="$event.stopPropagation()"
+      (keydown.enter)="$event.stopPropagation()"
+      (keydown.space)="$event.preventDefault(); $event.stopPropagation()"
+    >
+      <button class="lightbox__close" (click)="closeLightbox()">&#x2715;</button>
+      <button class="lightbox__prev" (click)="lightboxPrev()">&#8249;</button>
+      <img
+        class="lightbox__img"
+        [src]="lightboxImages()[lightboxIndex()].url"
+        [alt]="lightboxImages()[lightboxIndex()].alt_text"
+      />
+      <button class="lightbox__next" (click)="lightboxNext()">&#8250;</button>
+      <div class="lightbox__counter">
+        {{ lightboxIndex() + 1 }} / {{ lightboxImages().length }}
+      </div>
+    </div>
+  </div>
+}

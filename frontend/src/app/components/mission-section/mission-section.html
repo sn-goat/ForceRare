@@ -1,0 +1,20 @@
+<section class="mission section" id="mission">
+  <div class="section__inner">
+    <div class="mission__accent-bar"></div>
+    <h2 class="section-heading">{{ mission.heading }}</h2>
+    <p class="mission__body">{{ mission.body }}</p>
+
+    <ul class="mission__list">
+      @for (bullet of mission.bullets; track bullet) {
+        <li class="mission__item">
+          <span class="mission__check">✓</span>
+          <span>{{ bullet }}</span>
+        </li>
+      }
+    </ul>
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <a class="btn-primary" routerLink="/notre-mission">{{ mission.cta }}</a>
+    </div>
+  </div>
+</section>

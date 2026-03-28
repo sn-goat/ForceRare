@@ -1,0 +1,83 @@
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.benefit-card {
+  padding: 2rem;
+  background: var(--color-surface);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: box-shadow var(--transition-speed);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--color-text-light);
+    margin-top: 0.5rem;
+  }
+}
+
+.benefit-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.collab-forms {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.collab-form {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+.collab-form__number {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--color-primary);
+  opacity: 0.3;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 50px;
+}
+
+.collab-form__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
+}
+
+.collab-form__desc {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--color-text-light);
+}

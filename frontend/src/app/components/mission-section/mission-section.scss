@@ -1,0 +1,52 @@
+.mission {
+  background: var(--color-surface-alt);
+}
+
+.mission__accent-bar {
+  width: 60px;
+  height: 4px;
+  background: var(--color-primary);
+  border-radius: 2px;
+  margin: 0 auto 1.5rem;
+}
+
+.mission__body {
+  text-align: center;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--color-text-light);
+  max-width: 700px;
+  margin: 0 auto 3rem;
+}
+
+.mission__list {
+  max-width: 650px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.mission__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.mission__check {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-top: 2px;
+}

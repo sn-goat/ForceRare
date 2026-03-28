@@ -1,0 +1,35 @@
+<section class="team section" id="equipe">
+  <div class="section__inner">
+    <h2 class="section-heading">Les fondateurs</h2>
+    <p class="section-subtext">Force Rare est porté par des athlètes universitaires engagés qui croient au pouvoir du sport comme vecteur de changement.</p>
+
+    <div class="team__grid">
+      @for (founder of founders; track founder.name) {
+        <div class="team__card">
+          @if (getFounderImage(founder.name); as img) {
+            <img
+              class="team__photo"
+              [ngSrc]="img.url"
+              [alt]="founder.name"
+              width="300"
+              height="400"
+            />
+          } @else {
+            <div class="team__photo-placeholder">
+              <span class="team__initials">{{ founder.name.charAt(0) }}</span>
+            </div>
+          }
+          <div class="team__info">
+            <h3 class="team__name">{{ founder.name }}</h3>
+            <span class="team__role">{{ founder.role }}</span>
+            <p class="team__bio">{{ founder.shortBio }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div style="text-align: center; margin-top: 2.5rem;">
+      <a class="btn-primary" routerLink="/notre-equipe">Découvrir l'équipe</a>
+    </div>
+  </div>
+</section>

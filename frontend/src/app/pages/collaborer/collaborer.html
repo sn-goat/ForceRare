@@ -1,0 +1,61 @@
+<app-page-hero
+  [title]="page.hero.title"
+  [subtitle]="page.hero.subtitle"
+  [backgroundImage]="heroImage()"
+/>
+
+<section class="section content-section">
+  <div class="section__inner content-narrow">
+    <div class="accent-bar"></div>
+    <p class="content-lead">{{ page.intro }}</p>
+  </div>
+</section>
+
+<section class="section content-section content-section--alt">
+  <div class="section__inner content-narrow">
+    <h2 class="content-heading">{{ page.benefits.heading }}</h2>
+    <p class="content-body">{{ page.benefits.intro }}</p>
+    <div class="benefits-grid">
+      @for (card of page.benefits.cards; track card.title) {
+        <div class="benefit-card">
+          <h3 class="benefit-card__title">{{ card.title }}</h3>
+          <p>{{ card.description }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section content-section">
+  <div class="section__inner content-narrow">
+    <h2 class="content-heading">{{ page.forms.heading }}</h2>
+    <div class="collab-forms">
+      @for (form of page.forms.items; track form.number) {
+        <div class="collab-form">
+          <span class="collab-form__number">{{ form.number }}</span>
+          <div>
+            <h3 class="collab-form__title">{{ form.title }}</h3>
+            <p class="collab-form__desc">{{ form.description }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section content-section content-section--dark">
+  <div class="section__inner content-narrow" style="text-align: center;">
+    <h2 class="content-heading content-heading--light">{{ page.cta.heading }}</h2>
+    <p class="content-body content-body--on-dark">{{ page.cta.body }}</p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+      <a class="btn-primary" routerLink="/nous-joindre">
+        {{ page.cta.primaryCta }}
+      </a>
+      <a class="btn-outline" [href]="donateUrl" target="_blank" rel="noopener noreferrer">
+        {{ page.cta.secondaryCta }}
+      </a>
+    </div>
+  </div>
+</section>
+
+<app-cta-banner />

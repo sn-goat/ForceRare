@@ -1,0 +1,94 @@
+.mission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  max-width: var(--max-content-width);
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.mission-grid__image {
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+
+  @media (max-width: 900px) {
+    order: -1;
+  }
+}
+
+.mission-grid__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 4 / 3;
+}
+
+.ambitions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ambition-card {
+  background: var(--color-surface);
+  border-radius: var(--border-radius);
+  padding: 2rem 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: box-shadow var(--transition-speed);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.ambition-card__title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-primary);
+  margin-bottom: 1.25rem;
+}
+
+.ambition-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  li {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-text-light);
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-surface-alt);
+  }
+}
+
+.ambassador-roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 2rem;
+  margin-top: 2rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ambassador-role {
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
