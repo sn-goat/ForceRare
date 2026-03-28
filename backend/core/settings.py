@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'axes',
     'django_otp',
     'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_static',
     'two_factor',
     'auditlog',
 ]
@@ -135,7 +136,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 
-# Chris modified this value to false to be able to display the right hours for the events
 USE_TZ = False 
 
 
@@ -144,8 +144,8 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800   # 50MB
-FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800   # 50MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800
+FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800
 
 CORS_ALLOWED_ORIGINS = [
     origin.strip()
