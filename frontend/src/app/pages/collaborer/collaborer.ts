@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
 import { PageHeroComponent } from '../../components/page-hero/page-hero';
@@ -16,6 +17,7 @@ import { ImageService } from '../../services/image.service';
 export class CollaborerComponent implements OnInit {
   private readonly content = inject(ContentService);
   private readonly imageService = inject(ImageService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly donateUrl = this.content.donateUrl;
   readonly page: CollaborerContent = this.content.getCollaborer();
@@ -23,12 +25,15 @@ export class CollaborerComponent implements OnInit {
   readonly heroImage = signal<string | null>(null);
 
   ngOnInit(): void {
-    this.imageService.getAll('general').subscribe({
+    this.imageService.getAll('general').pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (images) => {
-              if (images.length > 0) {
-                this.heroImage.set(images[1].url);
-              }
-            },
+        if (images.length > 0) {
+          this.heroImage.set(images[1].url);
+        }
+      },
+      error: () => undefined,
     });
   }
 }

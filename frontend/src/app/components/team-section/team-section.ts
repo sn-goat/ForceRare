@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -16,15 +17,19 @@ import { ContentService, FounderInfo } from '../../services/content.service';
 export class TeamSectionComponent implements OnInit {
   private readonly imageService = inject(ImageService);
   private readonly content = inject(ContentService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly founderImages = signal<ImageAsset[]>([]);
   readonly founders: FounderInfo[] = this.content.getFounders();
 
   ngOnInit(): void {
-    this.imageService.getAll('founder').subscribe({
+    this.imageService.getAll('founder').pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (images: ImageAsset[]) => {
         this.founderImages.set(images);
       },
+      error: () => undefined,
     });
   }
 

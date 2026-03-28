@@ -76,9 +76,8 @@
         </div>
       }
 
-      @if (cloeImages().length) {
+      @if (cloeImage(); as img) {
         <div class="logo-story__cloe-grid">
-          @for (img of cloeImages(); track img.id) {
             <img
               class="logo-story__img logo-story__img--small"
               [ngSrc]="img.url"
@@ -86,7 +85,6 @@
               width="380"
               height="380"
             />
-          }
         </div>
       }
     </div>
@@ -133,6 +131,28 @@
       {{ page.vision.closing }}<br>
       Mais notre ambition est claire&nbsp;: <strong>{{ page.vision.closingBold }}</strong>.
     </p>
+  </div>
+</section>
+
+<section class="section content-section content-section--alt" id="site-web">
+  <div class="section__inner website-story">
+    <div class="website-story__text">
+      <h2 class="content-heading">{{ page.websiteStory.heading }}</h2>
+      @for (p of page.websiteStory.paragraphs; track p) {
+        <p class="content-body">{{ p }}</p>
+      }
+    </div>
+    @if (websiteImage(); as img) {
+      <div class="website-story__media">
+        <img
+          class="website-story__img"
+          [ngSrc]="img.url"
+          [alt]="img.alt_text || img.title"
+          width="600"
+          height="400"
+        />
+      </div>
+    }
   </div>
 </section>
 

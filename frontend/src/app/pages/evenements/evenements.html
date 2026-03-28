@@ -156,9 +156,9 @@
         <div class="popup__images">
           @for (img of popupEvent()!.images; track img.id; let i = $index) {
             <img
-            class= "popup__img"
-            [src]= "img.url"
-            [alt]= "img.alt_text"
+            class="popup__img"
+            [src]="img.url"
+            [alt]="img.alt_text"
             role="button"
             tabindex="0"
             (click)="openLightbox(popupEvent()!.images, i)"

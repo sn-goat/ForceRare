@@ -1,8 +1,7 @@
 import json
-import re
+import html
 import logging
 from datetime import timedelta
-from .models import ImageAsset, Event
 from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
@@ -11,7 +10,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from .models import ImageAsset, VideoAsset
+from .models import ImageAsset, VideoAsset, Event
 
 logger = logging.getLogger(__name__)
 
@@ -29,8 +28,8 @@ VALID_SUBJECTS = [
 ]
 
 
-def _strip_html(value: str) -> str:
-    return re.sub(r'<[^>]+>', '', value)
+def _sanitize(value: str) -> str:
+    return html.escape(value.strip())
 
 
 def _serialize_image(image: ImageAsset, request):
@@ -103,11 +102,11 @@ def contact(request):
     except json.JSONDecodeError:
         return JsonResponse({'detail': 'Invalid JSON.'}, status=400)
 
-    name = _strip_html(data.get('name', '')).strip()
-    email = _strip_html(data.get('email', '')).strip()
-    subject = _strip_html(data.get('subject', '')).strip()
-    custom_subject = _strip_html(data.get('customSubject', '')).strip()
-    message = _strip_html(data.get('message', '')).strip()
+    name = _sanitize(data.get('name', ''))
+    email = _sanitize(data.get('email', ''))
+    subject = _sanitize(data.get('subject', ''))
+    custom_subject = _sanitize(data.get('customSubject', ''))
+    message = _sanitize(data.get('message', ''))
 
     errors = {}
 

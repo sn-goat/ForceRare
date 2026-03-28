@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -18,6 +19,7 @@ import { ContentService, NotreEquipeContent, FounderInfo } from '../../services/
 export class NotreEquipeComponent implements OnInit {
   private readonly imageService = inject(ImageService);
   private readonly content = inject(ContentService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly page: NotreEquipeContent = this.content.getNotreEquipe();
   readonly founders: FounderInfo[] = this.content.getFounders();
@@ -25,13 +27,19 @@ export class NotreEquipeComponent implements OnInit {
   readonly teamImage = signal<ImageAsset | null>(null);
 
   ngOnInit(): void {
-    this.imageService.getAll('founder').subscribe({
+    this.imageService.getAll('founder').pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (images: ImageAsset[]) => this.founderImages.set(images),
+      error: () => undefined,
     });
-    this.imageService.getAll('general').subscribe({
+    this.imageService.getAll('general').pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (images: ImageAsset[]) => {
         this.teamImage.set(images[3]);
       },
+      error: () => undefined,
     });
   }
 

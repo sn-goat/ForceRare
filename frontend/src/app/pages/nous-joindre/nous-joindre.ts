@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
@@ -19,6 +20,7 @@ export class NousJoindreComponent implements OnInit {
   private readonly imageService = inject(ImageService);
   private readonly http = inject(HttpClient);
   private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly page: NousJoindreContent = this.content.getNousJoindre();
   readonly footer = this.content.getFooter();
@@ -42,7 +44,9 @@ export class NousJoindreComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.imageService.getAll('hero').subscribe({
+    this.imageService.getAll('hero').pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (images) => {
         const bg = images.find(
           (img) =>
@@ -52,9 +56,12 @@ export class NousJoindreComponent implements OnInit {
           this.heroImage.set(bg.url);
         }
       },
+      error: () => undefined,
     });
 
-    this.form.get('subject')!.valueChanges.subscribe((value) => {
+    this.form.get('subject')!.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe((value) => {
       const isAutre = value === 'Autre';
       this.showCustomSubject.set(isAutre);
       const ctrl = this.form.get('customSubject')!;

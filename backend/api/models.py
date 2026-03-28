@@ -1,5 +1,27 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 from auditlog.registry import auditlog
+
+ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp']
+ALLOWED_VIDEO_EXTENSIONS = ['mp4', 'mov', 'webm']
+
+MAX_IMAGE_FILE_SIZE = 10 * 1024 * 1024       # 10 MB
+MAX_VIDEO_FILE_SIZE = 500 * 1024 * 1024      # 500 MB
+
+
+def validate_image_file_size(value):
+	if value.size > MAX_IMAGE_FILE_SIZE:
+		raise ValidationError(
+			f'Le fichier image ne doit pas dépasser {MAX_IMAGE_FILE_SIZE // (1024 * 1024)} Mo.'
+		)
+
+
+def validate_video_file_size(value):
+	if value.size > MAX_VIDEO_FILE_SIZE:
+		raise ValidationError(
+			f'Le fichier vidéo ne doit pas dépasser {MAX_VIDEO_FILE_SIZE // (1024 * 1024)} Mo.'
+		)
 
 
 IMAGE_CATEGORY_CHOICES = [
@@ -19,7 +41,13 @@ VIDEO_CATEGORY_CHOICES = [
 
 
 class ImageAsset(models.Model):
-	file = models.ImageField(upload_to="uploads/images/")
+	file = models.ImageField(
+		upload_to="uploads/images/",
+		validators=[
+			FileExtensionValidator(allowed_extensions=ALLOWED_IMAGE_EXTENSIONS),
+			validate_image_file_size,
+		],
+	)
 	title = models.CharField(max_length=255, blank=True)
 	alt_text = models.CharField(max_length=255, blank=True)
 	category = models.CharField(
@@ -40,7 +68,13 @@ class ImageAsset(models.Model):
 
 
 class VideoAsset(models.Model):
-	file = models.FileField(upload_to="uploads/videos/")
+	file = models.FileField(
+		upload_to="uploads/videos/",
+		validators=[
+			FileExtensionValidator(allowed_extensions=ALLOWED_VIDEO_EXTENSIONS),
+			validate_video_file_size,
+		],
+	)
 	title = models.CharField(max_length=255, blank=True)
 	description = models.TextField(blank=True)
 	category = models.CharField(
@@ -48,7 +82,14 @@ class VideoAsset(models.Model):
 		choices=VIDEO_CATEGORY_CHOICES,
 		default="general",
 	)
-	thumbnail = models.ImageField(upload_to="uploads/thumbnails/", blank=True)
+	thumbnail = models.ImageField(
+		upload_to="uploads/thumbnails/",
+		blank=True,
+		validators=[
+			FileExtensionValidator(allowed_extensions=ALLOWED_IMAGE_EXTENSIONS),
+			validate_image_file_size,
+		],
+	)
 	is_published = models.BooleanField(default=False)
 	display_order = models.PositiveIntegerField(default=0)
 	created_at = models.DateTimeField(auto_now_add=True)
@@ -80,7 +121,13 @@ class Event(models.Model):
 
 class EventImage(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
-    file = models.ImageField(upload_to='uploads/events/')
+    file = models.ImageField(
+        upload_to='uploads/events/',
+        validators=[
+            FileExtensionValidator(allowed_extensions=ALLOWED_IMAGE_EXTENSIONS),
+            validate_image_file_size,
+        ],
+    )
     alt_text = models.CharField(max_length=255, blank=True)
     display_order = models.PositiveIntegerField(default=0)
 

@@ -185,13 +185,14 @@ AXES_COOLOFF_TIME = 1
 AXES_LOCKOUT_TEMPLATE = 'lockout.html'
 AXES_LOCKOUT_PARAMETERS = ['username', 'ip_address'] 
 AXES_RESET_ON_SUCCESS = True 
+AXES_ENABLE_ACCESS_FAILURE_LOG = True
 
 
 LOGIN_URL = 'two_factor:login'
 LOGIN_REDIRECT_URL = '/forcerare-control-panel/admin/'
 
-# TWO_FACTOR_FORCE_OTP_ADMIN = True to add later
-# TWO_FACTOR_PATCH_ADMIN = True
+TWO_FACTOR_FORCE_OTP_ADMIN = True
+TWO_FACTOR_PATCH_ADMIN = True
 
 LOGGING = {
     'version': 1,

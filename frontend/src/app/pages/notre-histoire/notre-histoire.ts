@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgOptimizedImage } from '@angular/common';
 
 import { PageHeroComponent } from '../../components/page-hero/page-hero';
@@ -18,6 +19,7 @@ import { ImageAsset } from '../../models/image-asset';
 export class NotreHistoireComponent implements OnInit {
   private readonly content = inject(ContentService);
   private readonly imageService = inject(ImageService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly donateUrl = this.content.donateUrl;
   readonly page: NotreHistoireContent = this.content.getNotreHistoire();
@@ -25,10 +27,13 @@ export class NotreHistoireComponent implements OnInit {
   readonly heroImage = signal<string | null>(null);
   readonly storyImage = signal<ImageAsset | null>(null);
   readonly logoImage = signal<ImageAsset | null>(null);
-  readonly cloeImages = signal<ImageAsset[]>([]);
+  readonly cloeImage = signal<ImageAsset | null>(null);
+  readonly websiteImage = signal<ImageAsset | null>(null);
 
   ngOnInit(): void {
-    this.imageService.getAll('general').subscribe({
+    this.imageService.getAll('general').pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (images: ImageAsset[]) => {
         const field = images[3];
         if (field) {
@@ -39,21 +44,40 @@ export class NotreHistoireComponent implements OnInit {
           this.storyImage.set(team);
         }
       },
+      error: () => undefined,
     });
 
-      this.imageService.getAll('hero').subscribe({
+    this.imageService.getAll('hero').pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (images) => {
-              if (images.length > 0) {
-                this.logoImage.set(images[0]);
-              }
-            },
+        if (images.length > 0) {
+          this.logoImage.set(images[0]);
+        }
+      },
+      error: () => undefined,
     });
 
-    this.imageService.getAll('founder').subscribe({
+    this.imageService.getAll('founder').pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (images: ImageAsset[]) => {
-        const cloe0 = images[4]; const cloe1 = images[5];
-        this.cloeImages.set([cloe0,cloe1]);
+        const cloe = images[4];
+        this.cloeImage.set(cloe);
       },
+      error: () => undefined,
+    });
+
+    this.imageService.getAll('about').pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (images: ImageAsset[]) => {
+        const img = images[0];
+        if (img) {
+          this.websiteImage.set(img);
+        }
+      },
+      error: () => undefined,
     });
   }
 

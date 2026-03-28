@@ -117,6 +117,10 @@ export interface NotreHistoireContent {
     closing: string;
     closingBold: string;
   };
+  websiteStory: {
+    heading: string;
+    paragraphs: string[];
+  };
 }
 
 export interface AmbitionCard {
@@ -311,6 +315,22 @@ export class ContentService {
         fullBio:
           'Cofondateur et responsable de la création de contenu, Dylan assure toute la dimension médiatique du projet. Il produit les vidéos, les témoignages et l\'ensemble du contenu visuel qui permettent à Force Rare de toucher les cœurs et d\'atteindre un public élargi.',
       },
+      {
+        name: 'Sergile Nyouvop',
+        role: 'Responsable de la technologie',
+        shortBio:
+          'Étudiant en génie informatique à Polytechnique et joueur de football des Carabins. Conçoit la partie technique du site.',
+        fullBio:
+          'Derrière notre site web, Sergile Nyouvop met son expertise en génie informatique au service du collectif. Étudiant à Polytechnique et joueur de football des Carabins, il a su concevoir la partie technique du site avec la même discipline et lucidité que le sport lui a apprises. Membre actif de la communauté étudiante de cybersécurité, il incarne cette alliance rare entre excellence et humilité.',
+      },
+      {
+        name: 'Chris-Noah Adjoka',
+        role: 'Co-responsable de la technologie',
+        shortBio:
+          'Étudiant en mathématiques et informatique à l\'Université de Montréal. Participe à donner forme et cohérence au site web.',
+        fullBio:
+          'Étudiant en mathématiques et informatique à l\'Université de Montréal, Chris-Noah Adjoka participe à donner forme et cohérence au site web. Réfléchi, attentif aux autres et toujours prêt à proposer des pistes nouvelles, il contribue à façonner une expérience claire et accueillante pour tous ceux qui découvrent Force Rare.',
+      },
     ];
   }
 
@@ -372,6 +392,28 @@ export class ContentService {
         websiteUrl: 'https://fondationduchudequebec.ca',
         websiteLabel: 'Visiter fondationduchudequebec.ca',
       },
+      {
+        name: 'NovaStim',
+        fullName: 'Le laboratoire NovaStim — Cyril Schneider',
+        shortDescription:
+          'Laboratoire de neurosciences de la réadaptation dirigé par Cyril Schneider, chercheur de renommée internationale à l\'Université Laval.',
+        fullDescription: [
+          'Force Rare est fier d\'annoncer un partenariat officiel avec le laboratoire NovaStim, dirigé par Cyril Schneider, professeur à l\'Université Laval et chercheur de renommée internationale.',
+          'Visionnaire, innovateur et leader en neurosciences de la réadaptation, le Dr Schneider repousse les limites de la science avec des travaux de pointe en neurostimulation, transformant concrètement la vie de nombreux patients.',
+          'Ses travaux s\'inscrivent dans un réseau de collaboration internationale, contribuant à faire avancer la science à l\'échelle mondiale et à positionner le Québec comme un véritable pôle d\'excellence en recherche en réadaptation.',
+          'Ses recherches ne restent pas sur papier\u00a0: elles redonnent du mouvement, diminuent la douleur et redonnent espoir. Avec NovaStim, Force Rare s\'entoure d\'une expertise exceptionnelle pour connecter la science de haut niveau à la réalité humaine.',
+          'Force Rare devient ainsi bien plus qu\'un projet de sensibilisation\u00a0: c\'est une plateforme qui unit science, communauté et action pour transformer la réalité des maladies rares au Québec. Un partenariat qui change des vies. Force Rare x NovaStim\u00a0!',
+        ],
+        missions: [
+          'Recherche de pointe en neurostimulation',
+          'Réadaptation et amélioration de la qualité de vie des patients',
+          'Collaboration internationale en neurosciences',
+          'Positionnement du Québec comme pôle d\'excellence en recherche en réadaptation',
+        ],
+        partnershipNote: '',
+        websiteUrl: 'https://www.facebook.com/NovaStimLab/',
+        websiteLabel: 'Visiter leur page Facebook',
+      },
     ];
   }
 
@@ -392,7 +434,7 @@ export class ContentService {
         heading: 'Notre impact',
         subheading: 'Force Rare en un coup d\'œil',
         items: [
-          { value: 3, label: 'Partenaires officiels' },
+          { value: 4, label: 'Partenaires officiels' },
           { value: 4, label: 'Fondateurs engagés' },
           { value: 1, label: 'Événement phare à venir', suffix: 'er' },
         ],
@@ -431,6 +473,7 @@ export class ContentService {
         { label: 'Instagram', url: 'https://www.instagram.com/force.rare', icon: 'instagram' },
         { label: 'Facebook', url: 'https://www.facebook.com/profile.php?id=61577886373634', icon: 'facebook' },
         { label: 'Youtube', url: 'http://www.youtube.com/@Force_rare', icon: 'youtube' },
+        { label: 'LinkedIn', url: 'https://www.linkedin.com/company/force-rare/', icon: 'linkedin' },
       ],
     };
   }
@@ -556,6 +599,14 @@ export class ContentService {
         ],
         closing: 'Force Rare n\'est qu\'au début de son histoire.',
         closingBold: 'bâtir quelque chose qui dépasse une génération',
+      },
+      websiteStory: {
+        heading: 'L\'histoire de notre site web',
+        paragraphs: [
+          'Le site web de Force Rare est né d\'une amitié et d\'une confiance partagée. Avant d\'être une collaboration numérique, c\'est la rencontre de coéquipiers, unis par l\'envie d\'avoir un impact réel. Il a été façonné entre deux séances d\'entraînement, quelques soirs de semaine et grâce à beaucoup de passion. De la première ligne de code jusqu\'au lancement, tout a été créé avec soin, par deux étudiants engagés et animés par le même objectif\u00a0: offrir à Force Rare une présence numérique à l\'image du projet.',
+          'Sergile Nyouvop et Chris-Noah Adjoka n\'y ont pas seulement écrit du code. Porté par la vision de Force Rare et par sa cause, ce site reflète autant leur sérieux que leur humanité. Ils ont pris le temps de comprendre l\'histoire, les valeurs et les besoins du mouvement pour les traduire en une plateforme qui lui correspond. Leur travail bénévole, souvent réalisé dans l\'ombre, permet aujourd\'hui à Force Rare de raconter son histoire, de mobiliser une communauté et de soutenir des familles à travers un outil numérique solide et évolutif.',
+          'Au quotidien, ils continuent d\'ajuster le site pour lui permettre d\'évoluer au rythme du projet. Leur implication rappelle que derrière chaque page, chaque fonctionnalité et chaque détail se trouvent des personnes qui croient profondément en ce que Force Rare représente\u00a0: des personnes qui ont choisi de mettre leurs compétences au service des autres.',
+        ],
       },
     };
   }

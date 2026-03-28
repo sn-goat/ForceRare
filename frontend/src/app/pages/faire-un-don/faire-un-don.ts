@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { PageHeroComponent } from '../../components/page-hero/page-hero';
 import { ContentService, FaireUnDonContent } from '../../services/content.service';
@@ -14,6 +15,7 @@ import { ImageService } from '../../services/image.service';
 export class FaireUnDonComponent implements OnInit {
   private readonly content = inject(ContentService);
   private readonly imageService = inject(ImageService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly donateUrl = this.content.donateUrl;
   readonly page: FaireUnDonContent = this.content.getFaireUnDon();
@@ -21,7 +23,9 @@ export class FaireUnDonComponent implements OnInit {
   readonly heroImage = signal<string | null>(null);
 
   ngOnInit(): void {
-    this.imageService.getAll('general').subscribe({
+    this.imageService.getAll('general').pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (images) => {
         const bg = images.find(
           (img) =>
@@ -31,6 +35,7 @@ export class FaireUnDonComponent implements OnInit {
           this.heroImage.set(bg.url);
         }
       },
+      error: () => undefined,
     });
   }
 }

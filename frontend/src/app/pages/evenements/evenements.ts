@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal, computed, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal, computed, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { PageHeroComponent } from '../../components/page-hero/page-hero';
 import { CtaBannerComponent } from '../../components/cta-banner/cta-banner';
@@ -16,6 +17,7 @@ import { Event } from '../../models/event';
 export class EvenementsComponent implements OnInit {
   private readonly eventService = inject(EventService);
   private readonly imageService = inject(ImageService);
+  private readonly destroyRef = inject(DestroyRef);
 
   @ViewChild('futureStripRef') futureStripRef!: ElementRef<HTMLDivElement>;
   @ViewChild('pastStripRef') pastStripRef!: ElementRef<HTMLDivElement>;
@@ -59,18 +61,23 @@ export class EvenementsComponent implements OnInit {
   );
 
   ngOnInit(): void {
-    this.eventService.getAll().subscribe({
+    this.eventService.getAll().pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (events) => {
-      this.events.set(events);
-    },
-      error: (err) => console.error('error', err)
+        this.events.set(events);
+      },
+      error: () => undefined,
     });
-    this.imageService.getAll('general').subscribe({
+    this.imageService.getAll('general').pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (images) => {
-              if (images.length > 0) {
-                this.heroImage.set(images[2].url);
-              }
-            },
+        if (images.length > 0) {
+          this.heroImage.set(images[2].url);
+        }
+      },
+      error: () => undefined,
     });
   }
 
