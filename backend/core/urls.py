@@ -14,9 +14,23 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from django.views.generic import RedirectView
+from two_factor.admin import AdminSiteOTPRequired
+from two_factor.urls import urlpatterns as tf_urls
+
+otp_admin = AdminSiteOTPRequired()
+otp_admin._registry = admin.site._registry
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('forcerare-control-panel/', RedirectView.as_view(url='/forcerare-control-panel/admin/')),
+    path('forcerare-control-panel/admin/', otp_admin.urls),
+    path('forcerare-control-panel/', include(tf_urls)),
+    path('api/', include('api.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

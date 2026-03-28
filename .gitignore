@@ -25,11 +25,10 @@ npm-debug.log*
 yarn-error.log*
 
 # Docker
-**/.dockerignore
+mysql_data/
 
-# IDE
-.vscode/
-.idea/
+# Claude
+.claude/
 
 # MySQL
 *.sql
