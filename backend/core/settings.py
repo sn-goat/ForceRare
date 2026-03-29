@@ -145,34 +145,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Linode Object Storage (S3-compatible) for media in production
-USE_SPACES = env_bool('USE_SPACES', False)
-
-if USE_SPACES:
-    INSTALLED_APPS += ['storages']
-    AWS_ACCESS_KEY_ID = os.getenv('SPACES_ACCESS_KEY')
-    AWS_SECRET_ACCESS_KEY = os.getenv('SPACES_SECRET_KEY')
-    AWS_STORAGE_BUCKET_NAME = os.getenv('SPACES_BUCKET_NAME')
-    AWS_S3_ENDPOINT_URL = os.getenv('SPACES_ENDPOINT_URL')
-    AWS_S3_CUSTOM_DOMAIN = os.getenv('SPACES_CDN_DOMAIN')
-    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-    AWS_DEFAULT_ACL = None
-    AWS_S3_ACL = None                      
-    AWS_QUERYSTRING_AUTH = False
-    AWS_S3_SIGNATURE_VERSION = 's3v4'
-    AWS_S3_REGION_NAME = 'us-ord-1'
-    AWS_S3_ADDRESSING_STYLE = 'path'
-    AWS_S3_FILE_OVERWRITE = False
-    AWS_LOCATION = 'media'
-    STORAGES = {
-        'default': {
-            'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
-        },
-        'staticfiles': {
-            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
-        },
-    }
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800
 FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800
@@ -223,9 +195,8 @@ LOGIN_REDIRECT_URL = '/'
 TWO_FACTOR_FORCE_OTP_ADMIN = True
 TWO_FACTOR_PATCH_ADMIN = True
 
-# Production security hardening
 if not DEBUG:
-    SECURE_SSL_REDIRECT = False  # Cloudflare handles HTTPS redirect
+    SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 31536000
