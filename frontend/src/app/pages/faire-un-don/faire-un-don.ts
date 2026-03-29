@@ -27,12 +27,8 @@ export class FaireUnDonComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (images) => {
-        const bg = images.find(
-          (img) =>
-            img.title.toLowerCase().includes('football field')
-        );
-        if (bg) {
-          this.heroImage.set(bg.url);
+        if (images.length > 0) {
+          this.heroImage.set(images[3].url);
         }
       },
       error: () => undefined,

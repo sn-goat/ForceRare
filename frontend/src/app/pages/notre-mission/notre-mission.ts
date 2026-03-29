@@ -32,7 +32,7 @@ export class NotreMissionComponent implements OnInit {
     ).subscribe({
       next: (images: ImageAsset[]) => {
         if (images.length > 0) {
-          this.missionImage.set(images[6]);
+          this.missionImage.set(images[5]);
           this.heroImage.set(images[3].url);
         }
       },

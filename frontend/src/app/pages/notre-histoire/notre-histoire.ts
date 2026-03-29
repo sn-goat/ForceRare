@@ -39,7 +39,7 @@ export class NotreHistoireComponent implements OnInit {
         if (field) {
           this.heroImage.set(field.url);
         }
-        const team = images[5]
+        const team = images[4]
         if (team) {
           this.storyImage.set(team);
         }
