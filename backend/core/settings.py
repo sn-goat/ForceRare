@@ -159,7 +159,7 @@ if USE_SPACES:
     AWS_DEFAULT_ACL = None
     AWS_QUERYSTRING_AUTH = False
     AWS_S3_SIGNATURE_VERSION = 's3v4'
-    AWS_S3_REGION_NAME = 'us-ord-1'
+    AWS_S3_REGION_NAME = 'us-ord-10'
     AWS_S3_ADDRESSING_STYLE = 'path'
     AWS_S3_FILE_OVERWRITE = False
     AWS_LOCATION = 'media'
