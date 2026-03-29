@@ -798,7 +798,7 @@ export class ContentService {
       sidebar: {
         coordTitle: 'Coordonnées',
         emailLabel: 'Courriel',
-        email: 'faq.force.rare@gmail.com',
+        email: 'contact@forcerare.ca',
         socialTitle: 'Réseaux sociaux',
         topicsTitle: 'Sujets fréquents',
         topics: [
