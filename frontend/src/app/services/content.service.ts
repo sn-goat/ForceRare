@@ -331,6 +331,14 @@ export class ContentService {
         fullBio:
           'Étudiant en mathématiques et informatique à l\'Université de Montréal, Chris-Noah Adjoka participe à donner forme et cohérence au site web. Réfléchi, attentif aux autres et toujours prêt à proposer des pistes nouvelles, il contribue à façonner une expérience claire et accueillante pour tous ceux qui découvrent Force Rare.',
       },
+      {
+        name: 'Louis Vincent',
+        role: 'Responsable des partenariats et du développement',
+        shortBio:
+          'Étudiant en finance à l\'Université Laval et ancien joueur de football universitaire. Développe les partenariats et le réseau de Force Rare.',
+        fullBio:
+          'Étudiant en finance à l\'Université Laval et actif dans le domaine des services financiers, Louis apporte à Force Rare une rigueur et une discipline forgées par son parcours d\'ancien joueur de football universitaire. Au sein de l\'équipe, Louis joue un rôle clé dans le développement du projet. Il contribue activement à la recherche de partenariats et à l\'expansion du réseau de Force Rare, afin d\'augmenter sa portée et de maximiser son impact auprès de la communauté.',
+      },
     ];
   }
 
