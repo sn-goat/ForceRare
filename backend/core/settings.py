@@ -156,7 +156,8 @@ if USE_SPACES:
     AWS_S3_ENDPOINT_URL = os.getenv('SPACES_ENDPOINT_URL')
     AWS_S3_CUSTOM_DOMAIN = os.getenv('SPACES_CDN_DOMAIN')
     AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-    AWS_DEFAULT_ACL = 'public-read'
+    AWS_DEFAULT_ACL = None
+    AWS_QUERYSTRING_AUTH = False
     AWS_LOCATION = 'media'
     STORAGES = {
         'default': {
