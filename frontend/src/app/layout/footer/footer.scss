@@ -79,8 +79,9 @@
 
   @media (max-width: 768px) {
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 }
 
@@ -97,6 +98,11 @@
   &:hover {
     color: var(--color-accent);
   }
+
+  @media (max-width: 768px) {
+    font-size: 0;
+    gap: 0;
+  }
 }
 
 .footer__social-icon {
@@ -108,6 +114,11 @@
   stroke-linecap: round;
   stroke-linejoin: round;
   flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .footer__bottom {
