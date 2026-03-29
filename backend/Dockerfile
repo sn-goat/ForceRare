@@ -16,7 +16,7 @@ RUN pip install --upgrade pip setuptools && pip install -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p /app/logs /app/staticfiles \
+RUN mkdir -p /app/logs /app/staticfiles /app/media \
     && python manage.py collectstatic --noinput
 
 RUN useradd -r -s /bin/false appuser && chown -R appuser:appuser /app
