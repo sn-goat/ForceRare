@@ -20,15 +20,6 @@
     @for (p of page.whatIs.paragraphs; track p) {
       <p class="content-body">{{ p }}</p>
     }
-  </div>
-</section>
-
-<section class="section content-section" id="comment-commence">
-  <div class="section__inner content-narrow">
-    <h2 class="content-heading">{{ page.howStarted.heading }}</h2>
-    @for (p of page.howStarted.paragraphs; track p) {
-      <p class="content-body">{{ p }}</p>
-    }
     @if (storyImage(); as img) {
       <div class="story-image">
         <img
@@ -39,6 +30,15 @@
           height="460"
         />
       </div>
+    }
+  </div>
+</section>
+
+<section class="section content-section" id="comment-commence">
+  <div class="section__inner content-narrow">
+    <h2 class="content-heading">{{ page.howStarted.heading }}</h2>
+    @for (p of page.howStarted.paragraphs; track p) {
+      <p class="content-body">{{ p }}</p>
     }
   </div>
 </section>
