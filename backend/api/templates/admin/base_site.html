@@ -1,6 +1,12 @@
 {% extends "admin/base.html" %}
+{% load static %}
 
 {% block title %}ForceRare Control Panel{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+{% endblock %}
 
 {% block branding %}
     <h1 id="site-name"><a href="{% url 'admin:index' %}">ForceRare Control Panel</a></h1>
