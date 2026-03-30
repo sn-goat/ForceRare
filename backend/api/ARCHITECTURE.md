@@ -57,4 +57,13 @@ Public read-only API for the Angular frontend + Django Admin for content managem
 
 ## Storage
 - **Dev**: local filesystem (`MEDIA_ROOT`)
-- **Production**: DigitalOcean Spaces via `django-storages` + `boto3` (S3-compatible)
+- **Production**: local Docker volume (`backend_media`), served by Nginx at `/media/`
+
+## Production Infrastructure
+- **Server**: Linode 2GB/1vCPU, Toronto (172.105.17.132)
+- **Containers**: Nginx (SSL + static files + reverse proxy), Django/Gunicorn (2 workers × 2 threads), MySQL 8.0
+- **SSL**: Cloudflare Edge + Origin Certificate (Full Strict), end-to-end encryption
+- **DNS/CDN**: Cloudflare (proxied)
+- **Email**: Cloudflare Email Routing (contact@forcerare.ca → Gmail), outbound via Gmail SMTP
+- **Firewall**: Linode — SSH 22, HTTP 80, HTTPS 443
+- **Real IP**: Cloudflare `CF-Connecting-IP` header forwarded by Nginx, used by Axes for login tracking
