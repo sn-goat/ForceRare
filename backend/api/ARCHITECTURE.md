@@ -60,7 +60,7 @@ Public read-only API for the Angular frontend + Django Admin for content managem
 - **Production**: local Docker volume (`backend_media`), served by Nginx at `/media/`
 
 ## Production Infrastructure
-- **Server**: Linode 2GB/1vCPU, Toronto (172.105.17.132)
+- **Server**: Linode 2GB/1vCPU, Toronto
 - **Containers**: Nginx (SSL + static files + reverse proxy), Django/Gunicorn (2 workers × 2 threads), MySQL 8.0
 - **SSL**: Cloudflare Edge + Origin Certificate (Full Strict), end-to-end encryption
 - **DNS/CDN**: Cloudflare (proxied)
