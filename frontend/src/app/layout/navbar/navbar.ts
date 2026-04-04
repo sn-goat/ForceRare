@@ -52,6 +52,7 @@ export class NavbarComponent {
   closeMenu(): void {
     this.menuOpen.set(false);
     this.mobileAboutOpen.set(false);
+    (document.activeElement as HTMLElement)?.blur();
   }
 
   private buildLinks(): NavbarLink[] {

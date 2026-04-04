@@ -184,12 +184,12 @@ def _serialize_event(event, request):
 
 @require_GET
 def event_list(request):
-    events = Event.objects.filter(is_published=True).order_by('date')
+    events = Event.objects.filter(is_published=True).prefetch_related('images').order_by('date')
     return JsonResponse([_serialize_event(e, request) for e in events], safe=False)
 
 @require_GET
 def event_detail(request, event_id: int):
-    event = Event.objects.filter(pk=event_id, is_published=True).first()
+    event = Event.objects.filter(pk=event_id, is_published=True).prefetch_related('images').first()
     if event is None:
         return JsonResponse({'detail': 'Not found.'}, status=404)
     return JsonResponse(_serialize_event(event, request))

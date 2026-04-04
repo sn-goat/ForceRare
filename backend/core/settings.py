@@ -94,6 +94,7 @@ if USE_MYSQL:
             'OPTIONS': {
                 'charset': 'utf8mb4',
             },
+            'CONN_MAX_AGE': 600,
         }
     }
 else:
@@ -195,6 +196,9 @@ LOGIN_REDIRECT_URL = '/'
 
 TWO_FACTOR_FORCE_OTP_ADMIN = True
 TWO_FACTOR_PATCH_ADMIN = True
+
+SESSION_COOKIE_AGE = 3600
+SESSION_SAVE_EVERY_REQUEST = True
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = False

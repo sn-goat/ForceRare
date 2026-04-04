@@ -570,7 +570,7 @@ export class ContentService {
           },
           {
             title: 'Reconnaissance aux étudiant-athlètes',
-            body: 'Les silhouettes levées ainsi que les icônes multisports au bas du logo rendent hommage aux étudiant-athlètes du Rouge et Or. Elles représentent leur engagement, leur discipline et leur rôle clé dans le rayonnement de la cause, bien au-delà de la performance sportive.',
+            body: 'Les silhouettes levées ainsi que les icônes multisports au bas du logo rendent hommage aux étudiant-athlètes. Elles représentent leur engagement, leur discipline et leur rôle clé dans le rayonnement de la cause, bien au-delà de la performance sportive.',
           },
         ],
       },

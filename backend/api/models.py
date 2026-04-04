@@ -54,8 +54,9 @@ class ImageAsset(models.Model):
 		max_length=20,
 		choices=IMAGE_CATEGORY_CHOICES,
 		default="general",
+		db_index=True,
 	)
-	is_published = models.BooleanField(default=False)
+	is_published = models.BooleanField(default=False, db_index=True)
 	display_order = models.PositiveIntegerField(default=0)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
@@ -81,6 +82,7 @@ class VideoAsset(models.Model):
 		max_length=20,
 		choices=VIDEO_CATEGORY_CHOICES,
 		default="general",
+		db_index=True,
 	)
 	thumbnail = models.ImageField(
 		upload_to="uploads/thumbnails/",
@@ -90,7 +92,7 @@ class VideoAsset(models.Model):
 			validate_image_file_size,
 		],
 	)
-	is_published = models.BooleanField(default=False)
+	is_published = models.BooleanField(default=False, db_index=True)
 	display_order = models.PositiveIntegerField(default=0)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
@@ -108,7 +110,7 @@ class Event(models.Model):
     description = models.TextField(blank=True)
     date = models.DateTimeField()
     location = models.CharField(max_length=255, blank=True)
-    is_published = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=False, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

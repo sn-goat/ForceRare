@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 
 import { ImageAsset, ImageCategory } from '../models/image-asset';
 
@@ -8,13 +8,21 @@ import { ImageAsset, ImageCategory } from '../models/image-asset';
 export class ImageService {
   private readonly http = inject(HttpClient);
   private readonly apiBase = '/api/images';
+  private readonly cache = new Map<string, Observable<ImageAsset[]>>();
 
   getAll(category?: ImageCategory): Observable<ImageAsset[]> {
-    let params = new HttpParams();
-    if (category) {
-      params = params.set('category', category);
+    const key = category ?? '__all__';
+    if (!this.cache.has(key)) {
+      let params = new HttpParams();
+      if (category) {
+        params = params.set('category', category);
+      }
+      this.cache.set(
+        key,
+        this.http.get<ImageAsset[]>(`${this.apiBase}/`, { params }).pipe(shareReplay(1)),
+      );
     }
-    return this.http.get<ImageAsset[]>(`${this.apiBase}/`, { params });
+    return this.cache.get(key)!;
   }
 
   getOne(id: number): Observable<ImageAsset> {
