@@ -184,7 +184,7 @@ def _serialize_event(event, request):
 
 @require_GET
 def event_list(request):
-    events = Event.objects.filter(is_published=True).prefetch_related('images').order_by('date')
+    events = Event.objects.filter(is_published=True).prefetch_related('images').order_by('-date')
     return JsonResponse([_serialize_event(e, request) for e in events], safe=False)
 
 @require_GET
