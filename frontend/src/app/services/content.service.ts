@@ -824,7 +824,7 @@ export class ContentService {
           'Chaque don, peu importe sa taille, contribue directement au soutien des enfants et des familles touchées par les maladies rares au Québec. Vos contributions sont dirigées vers nos partenaires reconnus\u00a0: le RQMO, le Fonds Mille-Pattes et le CHUL.',
           'Force Rare s\'engage à une transparence totale dans la gestion des fonds. Chaque dollar est orienté vers des initiatives concrètes\u00a0: soutien financier aux familles, sensibilisation publique et recherche médicale.',
         ],
-        cta: 'Faire un don via la Fondation du CHU de Québec',
+        cta: 'Faire un don',
         note: 'Plateforme de don sécurisée — 100% des fonds vont à la cause.',
       },
       impact: {
