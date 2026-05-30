@@ -34,17 +34,14 @@ export class EvenementsComponent implements OnInit {
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 });
 
-  readonly allEventsUnsorted = computed(() => {
-  return this.events()
-});
-
   readonly futureEvents = computed(() => {
     const now = new Date().getTime();
     return this.allEvents().filter((event) => new Date(event.date).getTime() >= now);
   });
 
   readonly pastEvents = computed(() => {
-    return this.allEventsUnsorted();
+    const now = new Date().getTime();
+    return this.allEvents().filter((event) => new Date(event.date).getTime() < now).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   });
 
   readonly calendarDays = computed(() => {
